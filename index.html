@@ -1952,7 +1952,8 @@ const PROFACT={
 
 /* ---------------- multiplayer: peer-to-peer, the host's game is the server ---------------- */
 const NET={role:'off',id:null,conns:new Map(),host:null,remotes:new Map(),peer:null,code:'',sendT:0,pend:null,inviteOut:'',replyOut:'',status:'',rshop:null,nextId:1,fxT:0};
-const RTC_CFG={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
+const TU='02bf9b69010a0a70320710af',TC='ykwPEuP2ONBjCpu7';
+const RTC_CFG={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun.relay.metered.ca:80'},{urls:'turn:global.relay.metered.ca:80',username:TU,credential:TC},{urls:'turn:global.relay.metered.ca:80?transport=tcp',username:TU,credential:TC},{urls:'turn:global.relay.metered.ca:443',username:TU,credential:TC},{urls:'turns:global.relay.metered.ca:443?transport=tcp',username:TU,credential:TC}]};
 let RTC_OK=null;function rtcSupported(){if(RTC_OK!==null)return RTC_OK;try{const pc=new RTCPeerConnection(RTC_CFG);pc.createDataChannel('t');pc.close();RTC_OK=true;}catch(e){RTC_OK=false;}return RTC_OK;}
 const myName=()=>((SV&&SV.name)||SET.pname||(SV?CL[SV.cls].n:'Hero')).slice(0,16);
 const myInfo=()=>({id:NET.id,name:myName(),cls:SV.cls,lv:SV.lv,sh:SV.shop?SV.shop.items.length:0,look:SV.look,fame:SV.fame||0,g:myGuildPub()});
@@ -1997,7 +1998,7 @@ async function joinRoom(code){code=(code||'').trim().toUpperCase().replace(/[^A-
   const peer=new Peer({config:RTC_CFG});NET.peer=peer;let done=false;const fail=t=>{if(done)return;done=true;netStatus(t);toast(t.replace(/<[^>]+>/g,''));try{peer.destroy();}catch(e){}if(NET.peer===peer)NET.peer=null;};
   peer.on('error',e=>fail(e.type==='peer-unavailable'?'❌ Room '+code+' isn’t online. The host must have the game open on screen (switching apps or locking the phone closes the room). Ask them to reopen it, then try again.':'❌ Couldn’t join ('+e.type+'). Try again in a moment.'));
   peer.on('open',()=>{netStatus('🤝 Found room '+code+' — connecting…');const dc=peer.connect('ryl-'+code,{reliable:true});
-    const to=setTimeout(()=>fail('❌ Found the room but couldn’t link up. Some mobile networks block direct connections — try both players on Wi-Fi, or use Direct Codes below.'),20000);
+    const to=setTimeout(()=>fail('❌ Found the room but couldn’t link up. Check both players have a good signal and try again.'),20000);
     dc.on('open',()=>{if(done)return;done=true;clearTimeout(to);NET.code=code;guestSetup(wrapPJ(dc));netStatus('🟢 Connected to room '+code);toast('Joined room '+code+'!');});});}
 async function joinInvite(code){if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}netStatus('Reading invite…');
   try{const pc=new RTCPeerConnection(RTC_CFG);pc.ondatachannel=e=>{const dc=e.channel;dc.onopen=()=>{guestSetup(wrapDC(dc,pc));NET.replyOut='';netStatus('Connected');};};
