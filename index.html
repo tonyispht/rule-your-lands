@@ -361,6 +361,7 @@ img.emb{vertical-align:-3px;display:inline-block}
 <script>
 (()=>{
 'use strict';
+const CG=!!window.__CG,CGS=CG?window.CrazyGames.SDK:null;const STO=CG?CGS.data:localStorage;
 const $=id=>document.getElementById(id);
 const TAU=Math.PI*2,rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t;
 const angDiff=(a,b)=>{let d=(b-a)%TAU;if(d>Math.PI)d-=TAU;if(d<-Math.PI)d+=TAU;return d;};
@@ -378,17 +379,17 @@ const STATS=['str','dex','con','int','wis'];
 const DEFSET={sound:true,music:true,shadows:true,showGuild:true,plate:true};
 const AKEY='emberwing_acc',CKEY=id=>'emberwing_c_'+id,MAXCH=4;
 let SV=null,SET=Object.assign({},DEFSET),ACC={chars:[],first:null,freeUsed:false,nextId:1,bank:{gold:0,items:{},mounts:[]},home:null,wardrobe:[],guilds:{},peak:0};
-const lsGet=k=>{try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}};
-const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+const lsGet=k=>{try{return JSON.parse(STO.getItem(k)||'null');}catch(e){return null;}};
+const lsSet=(k,v)=>{try{STO.setItem(k,JSON.stringify(v));}catch(e){}};
 {const a=lsGet(AKEY);if(a)ACC=Object.assign(ACC,a);ACC.wardrobe=ACC.wardrobe||[];ACC.guilds=ACC.guilds||{};const st=lsGet('emberwing_set');if(st)SET=Object.assign(SET,st);
   const old=lsGet('emberwing_v2');if(old&&old.cls&&!ACC.chars.length){old.id=1;old.mounts=[];old.mount=null;lsSet(CKEY(1),old);ACC.chars=[1];ACC.first=1;ACC.nextId=2;lsSet(AKEY,ACC);}}
 function saveAcc(){lsSet(AKEY,ACC);}
 function loadChar(id){const c=lsGet(CKEY(id));if(c){c.id=id;c.mounts=c.mounts||[];if(c.mount===undefined)c.mount=null;if(!c.inv){c.inv={hp:c.pot!=null?c.pot:3,mp:2};delete c.pot;}c.quests=c.quests||{};c.qdone=c.qdone||{};c.outposts=c.outposts||[];c.prof=c.prof||{};c.gear=c.gear||{neck:null,ring1:null,ring2:null};if(c.shop===undefined)c.shop=null;if(c.bind==null)c.bind=-1;}return c;}
 function newSave(cls){const c=CL[cls];const st={};STATS.forEach((k,i)=>st[k]=c.start[i]);const id=ACC.nextId++;ACC.chars.push(id);if(ACC.first==null)ACC.first=id;saveAcc();
   return{id,cls,base:cls,lv:1,xp:0,gold:0,inv:{hp:3,mp:2},quests:{},qdone:{},outposts:[],bind:-1,prof:{},gear:{neck:null,ring1:null,ring2:null},shop:null,kills:0,bosses:0,up:{sw:0,ar:0,dr:0},st,bonus:{str:0,dex:0,con:0,int:0,wis:0},free:0,sp:0,sr:{},mounts:[],mount:null};}
-function deleteChar(id){try{localStorage.removeItem(CKEY(id));}catch(e){}ACC.chars=ACC.chars.filter(x=>x!==id);saveAcc();}
+function deleteChar(id){try{STO.removeItem(CKEY(id));}catch(e){}ACC.chars=ACC.chars.filter(x=>x!==id);saveAcc();}
 function save(){if(SV)lsSet(CKEY(SV.id),SV);lsSet('emberwing_set',SET);}
-function resetAccount(){try{for(const id of ACC.chars)localStorage.removeItem(CKEY(id));for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('emberwing_c_')){localStorage.removeItem(k);i--;}}
+function resetAccount(){if(CG){try{STO.clear();}catch(e){}SV=null;location.reload();return;}try{for(const id of ACC.chars)localStorage.removeItem(CKEY(id));for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('emberwing_c_')){localStorage.removeItem(k);i--;}}
   localStorage.removeItem(AKEY);localStorage.removeItem('emberwing_v2');localStorage.removeItem('emberwing_v1');}catch(e){}SV=null;location.reload();}
 let wipeArm=0;
 document.addEventListener('click',e=>{const b=e.target.closest('[data-wipe]');if(!b)return;e.preventDefault();
@@ -918,7 +919,7 @@ function D2(){const c=CC(),s=tot(),L=SV.lv,sw=1+.12*SV.up.sw;
     mpReg:1+s.wis*.05+s.int*.03,hpReg:maxHp*.004+s.con*.03,spd:7.2*Math.min(1.15,1+s.dex*.0005)*(c.spd||1)*(1+buffV('spd')+buffV('pspd')+(gb.spd||0))*SPDX*(boostOn('spd')?1.15:1),
     pet:(11+3*(L-1))*(1+.25*SV.up.dr)*(1+buffV('pet'))};}
 const atkOf=(d,t)=>t==='mag'?d.mag:t==='holy'?d.holy:d.phys;
-const xpNeed=L=>Math.floor(45*Math.pow(L,1.4)+25);
+const xpNeed=L=>Math.floor(60*Math.pow(L,1.55)+40);
 const D={pos:new THREE.Vector3(2,1.6,20),face:0,fireT:1,state:'follow',flap:0};
 const enemies=[];let boss=null,killsSinceBoss=0,bossDue=22;
 const chests=[];
@@ -938,7 +939,7 @@ Object.assign(BEAST,{
   void:{name:'Voidstalker',body:0x2a1a3a,dark:0x120a1a,spike:0xc060ff,glow:0x8a20ff,eye:0xff60ff,eyeE:0xc020ff,hp:95,dmg:15,speed:4.7,scale:1.6,xpM:1.3,gold:[20,34],reach:2,kind:'ranged',proj:0xb050ff},
   horror:{name:'Void Colossus',elite:true,body:0x1a1024,dark:0x0a0612,spike:0xe080ff,glow:0xa030ff,armor:0x3a2a4a,eye:0xff60ff,eyeE:0xc020ff,hp:270,dmg:31,speed:2.5,scale:2.9,xpM:3.2,gold:[40,70],reach:2.6,kind:'slam'},
 });
-const xpBase=L=>xpNeed(L)/18;
+const xpBase=L=>(45*Math.pow(L,1.4)+25)/22;
 const diffMult=diff=>diff>=0?1+.08*Math.min(diff,10):Math.max(.03,Math.pow(.8,-diff));
 const edmg=e=>e.dmg*(1+.06*Math.max(0,e.lvl-(SV?SV.lv:1)));
 function diffCol(L){const df=L-SV.lv;return df>=5?'#ff4a3a':df>=3?'#ff9a3a':df>=-2?'#ffe066':df>=-6?'#7dff7a':'#a8a8a8';}
@@ -1586,7 +1587,7 @@ function renderStart(){const b=$('startBtns');let h=(JOIN_Q?`<div class="say" st
   if(ACC.chars.length)h+='<br><button class="pb off" style="margin-top:14px;font-size:12px" data-wipe="1">Reset entire account</button>';
   b.innerHTML=h;b.querySelectorAll('[data-play]').forEach(x=>x.onclick=()=>{initAudio();SV=loadChar(+x.dataset.play);beginGame(false);});
   const n=$('bNew');if(n)n.onclick=()=>{initAudio();openClassSel();};}
-function beginGame(fresh){try{if(innerWidth<900&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});}catch(_){}
+function beginGame(fresh){try{if(!CG&&innerWidth<900&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});}catch(_){}
   $('start').classList.add('hidden');$('hud').classList.remove('hidden');joyHome();
   for(const e of enemies)freeEnemy(e);enemies.length=0;
   P.pos.set(0,0,7);P.cd={};P.buffs={};GEARC=null;P.gather=null;buildStall();buildHome();
@@ -1597,8 +1598,10 @@ function beginGame(fresh){try{if(innerWidth<900&&document.documentElement.reques
   P.mounted=false;D.state='follow';if(MOUNT){scene.remove(MOUNT.root);MOUNT=null;}$('bMount').classList.remove('on');refreshMountBtn();
   if(loginReady())setTimeout(()=>{if(playing&&!paused&&!custMode)openLogin();},2600);
   if(JOIN_Q&&NET.role==='off'){const c=JOIN_Q;JOIN_Q=null;setTimeout(()=>{curNpc={d:{n:'Multiplayer',role:'Play together — no server needed',ic:'🌐',line:''}};dlgView='net';showDlg();joinRoom(c);},1500);}}
-let JOIN_Q=(()=>{try{const q=new URLSearchParams(location.search).get('join');if(q){history.replaceState(null,'',location.pathname);return q.toUpperCase();}}catch(e){}return null;})();
-applyShadows();setTimeout(renderStart,0);
+let JOIN_Q=(()=>{try{if(CG){const q=CGS.game.getInviteParam('join');if(q)return String(q).toUpperCase();}const q=new URLSearchParams(location.search).get('join');if(q){history.replaceState(null,'',location.pathname);return q.toUpperCase();}}catch(e){}return null;})();
+applyShadows();setTimeout(()=>{renderStart();if(CG)try{CGS.game.loadingStop();}catch(e){}},0);
+let cgPlay=null;function cgFrame(){if(!CG)return;const on=playing&&!paused&&!adBusy;if(on!==cgPlay){cgPlay=on;try{on?CGS.game.gameplayStart():CGS.game.gameplayStop();}catch(e){}}}
+addEventListener('touchend',()=>{try{if(AC&&AC.state==='suspended')AC.resume();}catch(e){}},{passive:true});addEventListener('click',()=>{try{if(AC&&AC.state==='suspended')AC.resume();}catch(e){}});
 
 
 /* ---------------- items & inventory ---------------- */
@@ -1702,7 +1705,7 @@ function qEvent(type,val){if(!SV||!SV.quests)return;if(type==='outpost')artInsp(
   if(type==='kill'){if(q.target!=='any'&&q.target!==val)continue;if(q.target==='any'&&val==='boss')continue;s.p++;}
   else if(type==='combo')s.p=Math.max(s.p,val);else s.p++;
   if(s.p>=q.n){s.p=q.n;toast('✅ '+q.t+' complete — return to '+NPCDEF.find(n=>n.id===q.g).n);SFX.chest();}}}
-function qReward(q){const L=SV.lv;return{gold:Math.round(q.gold*(1+.3*(L-1))),xp:Math.round(xpNeed(L)*q.xp),items:q.items||{},book:q.book};}
+function qReward(q){const L=SV.lv;return{gold:Math.round(q.gold*(1+.3*(L-1))),xp:Math.round(xpNeed(L)*q.xp*.6),items:q.items||{},book:q.book};}
 function acceptQ(id){if(Object.keys(SV.quests).length>=MAXQ){toast('Quest log full ('+MAXQ+')');return;}SV.quests[id]={p:0};SFX.buff();save();}
 function turnIn(id){const q=QBY[id],s=SV.quests[id];if(!s||s.p<q.n)return;const r=qReward(q);delete SV.quests[id];SV.qdone[id]=(SV.qdone[id]||0)+1;
   SV.gold+=r.gold;let got=[];for(const k in r.items){const n=invAdd(k,r.items[k]);if(n)got.push(itemInfo(k).ic+'×'+n);}
@@ -2067,7 +2070,7 @@ async function hostRoom(tries=0){if(!rtcSupported()){netStatus('Peer-to-peer is 
     else if(e.type!=='peer-unavailable')netStatus('Room problem: '+e.type);});}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible')return;const p=NET.peer;
   if(NET.role==='host'&&p){if(p.destroyed){NET.peer=null;NET.role='off';hostRoom();}else if(p.disconnected){netStatus('🟡 Reconnecting your room…');try{p.reconnect();}catch(e){}}keepAwake(true);}});
-const inviteLink=()=>location.origin+location.pathname+'?join='+NET.code;
+const inviteLink=()=>{if(CG){try{return CGS.game.inviteLink({join:NET.code});}catch(e){return'';}}return location.origin+location.pathname+'?join='+NET.code;};
 async function hostInvite(){if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}becomeHost();netStatus('Creating invite code…');
   const pc=new RTCPeerConnection(RTC_CFG);const dc=pc.createDataChannel('ryl');const off=await pc.createOffer();await pc.setLocalDescription(off);await iceDone(pc);
   NET.pend={pc,dc};NET.inviteOut=await packSDP(pc.localDescription);dc.onopen=()=>{hostAddConn(wrapDC(dc,pc));NET.inviteOut='';NET.pend=null;netStatus('A player connected!');};netStatus('Invite ready — send it to a friend');}
@@ -3327,7 +3330,7 @@ let gateG=null;function gateDeco(dt){if(!gateG){if(!(typeof NPCS!=='undefined'&&
 /* ---------------- secret dev console ---------------- */
 var GOD=false,SPDX=1;let conTaps=[];
 function conLog(t,c){const L=$('conLog');const d=document.createElement('div');d.textContent=t;if(c)d.style.color=c;L.appendChild(d);L.scrollTop=L.scrollHeight;}
-function conOpen(){if(!SV){toast('Start a game first');return;}$('con').classList.remove('hidden');paused=true;if(!$('conLog').children.length)conLog('Dev console — type "help". Changes save to this hero.','#ffd56a');setTimeout(()=>$('conIn').focus(),50);}
+function conOpen(){if(CG)return;if(!SV){toast('Start a game first');return;}$('con').classList.remove('hidden');paused=true;if(!$('conLog').children.length)conLog('Dev console — type "help". Changes save to this hero.','#ffd56a');setTimeout(()=>$('conIn').focus(),50);}
 function conClose(){$('con').classList.add('hidden');paused=false;}
 function setLevel(n){n=clamp(Math.round(n),1,100);const c=CC(),base=CL[c.parent||c.key]||CL[SV.cls];STATS.forEach((k,i)=>SV.st[k]=base.start[i]+(c.grow[k]||0)*(n-1));STATS.forEach(k=>SV.bonus[k]=0);SV.lv=n;SV.xp=0;SV.free=3*(n-1);
   const spent=Object.values(SV.sr||{}).reduce((a,r)=>a+Math.max(0,Math.min(5,r)-1),0);SV.sp=Math.max(0,(n-1)-spent);GEARC=null;const d=D2();P.hp=d.maxHp;P.mp=d.maxMp;refreshSkillBtns();updNameplate();lastHud='';if(n>=10&&CC().tier===1)setTimeout(openPromo,400);}
@@ -3433,7 +3436,7 @@ PANELS.push('login');
 // Fill in ONE provider when you have an account. Nothing is ever shown unless the player taps a "Watch" button.
 const AD_CFG={h5Client:'',h5Test:true};// Google AdSense H5 Games Ads, e.g. 'ca-pub-1234567890123456' (after beta approval)
 let ADP=null,adBusy=false;const host=location.hostname;
-function adProvider(){if(ADP)return ADP;
+function adProvider(){if(ADP)return ADP;if(CG){ADP='crazy';return ADP;}
   if(/crazygames/.test(host)||/crazygames/.test(document.referrer))ADP='crazy';else if(/poki/.test(host)||/poki/.test(document.referrer))ADP='poki';else if(AD_CFG.h5Client)ADP='h5';else ADP='none';
   if(ADP==='crazy'){const s=document.createElement('script');s.src='https://sdk.crazygames.com/crazygames-sdk-v3.js';s.onload=()=>{try{window.CrazyGames.SDK.init();}catch(e){}};document.head.appendChild(s);}
   if(ADP==='poki'){const s=document.createElement('script');s.src='https://game-cdn.poki.com/scripts/v2/poki-sdk.js';s.onload=()=>{try{PokiSDK.init();}catch(e){}};document.head.appendChild(s);}
@@ -3740,7 +3743,7 @@ function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/10
   else if(!playing){time+=dt*.3;grassU.uTime.value=time;camPos.set(Math.sin(time*.15)*6,15,24+Math.cos(time*.15)*4);camera.position.copy(camPos);camera.lookAt(0,0,8);updParts(dt);idle(dt);}
   if(custMode){custCamera(dt);if(playing)updParts(dt);}
   updWearFrame(dt);
-  updNums(dt);renderer.render(scene,camera);}
+  updNums(dt);cgFrame();renderer.render(scene,camera);}
 function idle(dt){D.flap+=dt*12;D.pos.set(P.pos.x+1.6,1.7+Math.sin(time*6)*.2,P.pos.z+1);D.face=P.face;drag.root.position.copy(D.pos);drag.root.rotation.y=D.face;const fl=Math.sin(D.flap);drag.wings[0].rotation.z=-.3+fl*.7;drag.wings[1].rotation.z=.3-fl*.7;
   hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;hero.capeP.rotation.x=.15+Math.sin(time*4)*.05;}
 requestAnimationFrame(loop);
