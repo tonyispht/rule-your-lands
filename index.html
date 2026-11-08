@@ -1513,7 +1513,7 @@ function refreshSkillBtns(){if(!SV)return;const c=CC();for(let i=0;i<4;i++){cons
   b.querySelector('.ic').textContent=id?SK[id].ic:'🔒';b.classList.toggle('lock',!un);b.querySelector('.mpc').textContent=un?skillCost(id):'Lv '+UNLOCK[i];b.title=id?SK[id].n:'';}}
 
 /* ---------------- start ---------------- */
-function renderStart(){const b=$('startBtns');let h='<div class="roster">';
+function renderStart(){const b=$('startBtns');let h=(JOIN_Q?`<div class="say" style="margin-bottom:8px">🌐 You were invited to room <b>${JOIN_Q}</b> — pick or create a hero and you’ll join automatically.</div>`:'')+'<div class="roster">';
   for(const id of ACC.chars){const c=loadChar(id);if(!c)continue;const cl=CL[c.cls];
     h+=`<div class="rc"><span class="ri">${cl.ic}</span><div class="rn">${c.guild?emImg(c.guild.em,16)+' ':''}${c.name||cl.n}<small>${RANKS[rankOf(c.fame||0)][2]} ${RANKS[rankOf(c.fame||0)][0]} · Lv ${c.lv} ${cl.n} · ${CL[cl.parent||c.cls].race==='akkan'?"Ak'kan":'Human'} · ◆ ${c.gold.toLocaleString()} · ${c.mounts&&c.mounts.length?c.mounts.map(m=>MOUNTS[m].ic).join(''):'no mounts'}${id===ACC.first?' · first hero':''}</small></div><button class="pb gold" data-play="${id}">Play</button></div>`;}
   h+='</div>';if(ACC.chars.length<MAXCH)h+=`<button class="go${ACC.chars.length?' alt':''}" id="bNew">${ACC.chars.length?'New character':'PLAY'}</button>`;
@@ -1529,7 +1529,9 @@ function beginGame(fresh){try{if(innerWidth<900&&document.documentElement.reques
   rebuildHero();const d=D2();P.hp=d.maxHp;P.mp=d.maxMp;playing=true;paused=false;
   banner(fresh?(SV.name||CL[SV.cls].n).toUpperCase()+'<small>'+CL[SV.cls].n.toUpperCase()+' · THE GOLDEN WILDS AWAIT</small>':'WELCOME BACK<small>'+CL[SV.cls].n.toUpperCase()+' · LEVEL '+SV.lv+'</small>',2.4);
   if(SV.lv>=10&&CC().tier===1)setTimeout(openPromo,600);else if(freeMountEligible())setTimeout(openMountPick,1200);
-  P.mounted=false;D.state='follow';if(MOUNT){scene.remove(MOUNT.root);MOUNT=null;}$('bMount').classList.remove('on');refreshMountBtn();}
+  P.mounted=false;D.state='follow';if(MOUNT){scene.remove(MOUNT.root);MOUNT=null;}$('bMount').classList.remove('on');refreshMountBtn();
+  if(JOIN_Q&&NET.role==='off'){const c=JOIN_Q;JOIN_Q=null;setTimeout(()=>{curNpc={d:{n:'Multiplayer',role:'Play together — no server needed',ic:'🌐',line:''}};dlgView='net';showDlg();joinRoom(c);},1500);}}
+let JOIN_Q=(()=>{try{const q=new URLSearchParams(location.search).get('join');if(q){history.replaceState(null,'',location.pathname);return q.toUpperCase();}}catch(e){}return null;})();
 applyShadows();setTimeout(renderStart,0);
 
 
@@ -1969,27 +1971,40 @@ function loadPeerJS(){return new Promise((res,rej)=>{if(window.Peer)return res()
 // --- hosting ---
 function becomeHost(){if(NET.role==='host')return;NET.role='host';NET.id='h';NET.conns.clear();chatSys('You are hosting. Friends can join with your code.');}
 function hostAddConn(c){const id='p'+(NET.nextId++);NET.conns.set(id,{c,info:null});c.onmsg=m=>hostRecv(id,m);c.onclose=()=>dropPeer(id);}
-async function hostRoom(){if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}netStatus('Starting room…');try{await loadPeerJS();}catch(e){netStatus('Could not load the matchmaking library.');return;}
-  becomeHost();const code=Array.from({length:6},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.random()*32|0]).join('');NET.code=code;
-  const peer=new Peer('ryl-'+code,{config:RTC_CFG});NET.peer=peer;
-  peer.on('open',()=>netStatus('Room open'));peer.on('connection',dc=>dc.on('open',()=>hostAddConn(wrapPJ(dc))));
-  peer.on('error',e=>{if(e.type==='unavailable-id'){peer.destroy();NET.role='off';hostRoom();}else netStatus('Room error: '+e.type);});}
+const ROOM_ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const newRoomCode=()=>Array.from({length:6},()=>ROOM_ABC[Math.random()*32|0]).join('');
+let wakeLock=null;async function keepAwake(on){try{if(on&&!wakeLock&&navigator.wakeLock){wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;});}else if(!on&&wakeLock){wakeLock.release();wakeLock=null;}}catch(e){}}
+async function hostRoom(tries=0){if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}netStatus('Opening your room…');try{await loadPeerJS();}catch(e){netStatus('Could not load the matchmaking service. Check your connection.');return;}
+  becomeHost();if(!SET.room){SET.room=newRoomCode();save();}const code=SET.room;NET.code=code;
+  const peer=new Peer('ryl-'+code,{config:RTC_CFG});NET.peer=peer;NET.online=false;
+  peer.on('open',()=>{NET.online=true;netStatus('🟢 Room online — keep the game open on screen while friends join');keepAwake(true);});
+  peer.on('connection',dc=>{dc.on('open',()=>hostAddConn(wrapPJ(dc)));});
+  peer.on('disconnected',()=>{NET.online=false;netStatus('🟡 Room offline — reconnecting…');setTimeout(()=>{if(NET.peer===peer&&!peer.destroyed&&peer.disconnected)try{peer.reconnect();}catch(e){}},1500);});
+  peer.on('error',e=>{if(e.type==='unavailable-id'){peer.destroy();NET.role='off';if(tries<4){netStatus('Reclaiming your room code…');setTimeout(()=>hostRoom(tries+1),4000);}else{SET.room=newRoomCode();save();hostRoom(0);}}
+    else if(e.type==='network'||e.type==='server-error'||e.type==='socket-error'||e.type==='socket-closed'){NET.online=false;netStatus('🟡 Matchmaker unreachable — retrying…');}
+    else if(e.type!=='peer-unavailable')netStatus('Room problem: '+e.type);});}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible')return;const p=NET.peer;
+  if(NET.role==='host'&&p){if(p.destroyed){NET.peer=null;NET.role='off';hostRoom();}else if(p.disconnected){netStatus('🟡 Reconnecting your room…');try{p.reconnect();}catch(e){}}keepAwake(true);}});
+const inviteLink=()=>location.origin+location.pathname+'?join='+NET.code;
 async function hostInvite(){if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}becomeHost();netStatus('Creating invite code…');
   const pc=new RTCPeerConnection(RTC_CFG);const dc=pc.createDataChannel('ryl');const off=await pc.createOffer();await pc.setLocalDescription(off);await iceDone(pc);
   NET.pend={pc,dc};NET.inviteOut=await packSDP(pc.localDescription);dc.onopen=()=>{hostAddConn(wrapDC(dc,pc));NET.inviteOut='';NET.pend=null;netStatus('A player connected!');};netStatus('Invite ready — send it to a friend');}
 async function hostAcceptReply(code){if(!NET.pend)return;try{await NET.pend.pc.setRemoteDescription(await unpackSDP(code));netStatus('Connecting…');}catch(e){netStatus('That reply code didn’t work.');}}
 // --- joining ---
 function guestSetup(c){NET.role='guest';NET.host=c;c.onmsg=guestRecv;c.onclose=()=>{chatSys('Disconnected from host.');leaveNet(true);};c.send({t:'hello',info:myInfo()});}
-async function joinRoom(code){code=(code||'').trim().toUpperCase();if(code.length<4){netStatus('Enter the host’s room code');return;}if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}
-  netStatus('Joining '+code+'…');try{await loadPeerJS();}catch(e){netStatus('Could not load the matchmaking library.');return;}
-  const peer=new Peer({config:RTC_CFG});NET.peer=peer;peer.on('error',e=>netStatus(e.type==='peer-unavailable'?'No room with that code.':'Join error: '+e.type));
-  peer.on('open',()=>{const dc=peer.connect('ryl-'+code,{reliable:true});dc.on('open',()=>{NET.code=code;guestSetup(wrapPJ(dc));netStatus('Connected');});});}
+async function joinRoom(code){code=(code||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<4){netStatus('Enter the host’s room code');return;}if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}
+  if(NET.peer){try{NET.peer.destroy();}catch(e){}NET.peer=null;}
+  netStatus('🔎 Looking for room '+code+'…');try{await loadPeerJS();}catch(e){netStatus('Could not load the matchmaking service. Check your connection.');return;}
+  const peer=new Peer({config:RTC_CFG});NET.peer=peer;let done=false;const fail=t=>{if(done)return;done=true;netStatus(t);toast(t.replace(/<[^>]+>/g,''));try{peer.destroy();}catch(e){}if(NET.peer===peer)NET.peer=null;};
+  peer.on('error',e=>fail(e.type==='peer-unavailable'?'❌ Room '+code+' isn’t online. The host must have the game open on screen (switching apps or locking the phone closes the room). Ask them to reopen it, then try again.':'❌ Couldn’t join ('+e.type+'). Try again in a moment.'));
+  peer.on('open',()=>{netStatus('🤝 Found room '+code+' — connecting…');const dc=peer.connect('ryl-'+code,{reliable:true});
+    const to=setTimeout(()=>fail('❌ Found the room but couldn’t link up. Some mobile networks block direct connections — try both players on Wi-Fi, or use Direct Codes below.'),20000);
+    dc.on('open',()=>{if(done)return;done=true;clearTimeout(to);NET.code=code;guestSetup(wrapPJ(dc));netStatus('🟢 Connected to room '+code);toast('Joined room '+code+'!');});});}
 async function joinInvite(code){if(!rtcSupported()){netStatus('Peer-to-peer is blocked in this view.');return;}netStatus('Reading invite…');
   try{const pc=new RTCPeerConnection(RTC_CFG);pc.ondatachannel=e=>{const dc=e.channel;dc.onopen=()=>{guestSetup(wrapDC(dc,pc));NET.replyOut='';netStatus('Connected');};};
     await pc.setRemoteDescription(await unpackSDP(code));const ans=await pc.createAnswer();await pc.setLocalDescription(ans);await iceDone(pc);NET.replyOut=await packSDP(pc.localDescription);NET.pend={pc};
     netStatus('Send this reply code back to the host');}catch(e){netStatus('That invite code didn’t work.');}}
 function leaveNet(silent){for(const{c}of NET.conns.values())c.close();if(NET.host)NET.host.close();if(NET.peer)try{NET.peer.destroy();}catch(e){}
-  for(const r of NET.remotes.values())freeRemote(r);NET.remotes.clear();NET.conns.clear();Object.assign(NET,{role:'off',id:null,host:null,peer:null,code:'',pend:null,inviteOut:'',replyOut:''});
+  for(const r of NET.remotes.values())freeRemote(r);NET.remotes.clear();NET.conns.clear();Object.assign(NET,{role:'off',id:null,host:null,peer:null,code:'',pend:null,inviteOut:'',replyOut:'',online:false});keepAwake(false);
   $('chatBtn').classList.add('hidden');if(!silent)chatSys('You left the session.');netStatus('');}
 // --- messaging ---
 function netSend(m){if(NET.role==='host'){m.from='h';for(const[id,p]of NET.conns)if(p.info&&(!m.to||m.to===id))p.c.send(m);}else if(NET.role==='guest'){NET.host.send(m);}}
@@ -2062,7 +2077,9 @@ function renderNet(){const ok=rtcSupported();let h='';
       <button class="pb wide" data-act="nminv" ${ok?'':'disabled'}>Host: create invite code</button>
       <textarea id="netInv" class="code" placeholder="Guest: paste the host’s invite code here"></textarea><button class="pb wide" data-act="nmjoin" ${ok?'':'disabled'}>Guest: use invite code</button>`;}
   else if(NET.role==='host'){
-    if(NET.code)h+=`<div class="qh">ROOM CODE</div><div class="bigcode">${NET.code}</div><button class="pb wide" data-act="ncopy:code">Copy room code</button>`;
+    if(NET.code)h+=`<div class="qh">YOUR ROOM CODE <span>${NET.online?'🟢 online':'🟡 connecting'}</span></div><div class="bigcode">${NET.code}</div>
+      <div class="gbrow"><button class="pb gold" data-act="nshare">📨 Share invite link</button><button class="pb" data-act="ncopy:code">Copy code</button></div>
+      <div style="font-size:11px;opacity:.75;margin:4px 0 8px">Your code stays the same every time you host. Friends can tap your invite link to join automatically. ⚠️ Keep this game open and on screen — locking your phone or switching apps takes the room offline until you come back.</div>`;
     h+=`<div class="qh">DIRECT INVITE</div>`;
     if(NET.inviteOut)h+=`<textarea class="code" readonly>${NET.inviteOut}</textarea><button class="pb wide" data-act="ncopy:inv">Copy invite code</button><textarea id="netRep" class="code" placeholder="Paste the guest’s reply code here"></textarea><button class="pb gold wide" data-act="nmrep">Connect</button>`;
     else h+=`<button class="pb wide" data-act="nminv">Create another invite code</button>`;}
@@ -2079,7 +2096,8 @@ Object.assign(PROFACT,{
   nname:()=>{SET.pname=($('netName').value||'').trim().slice(0,16);save();toast('Name saved');},
   nhost:()=>{hostRoom();},njoin:()=>{joinRoom($('netCode').value);},nminv:()=>{hostInvite().then(()=>renderDlg());},
   nmjoin:()=>{joinInvite($('netInv').value).then(()=>renderDlg());},nmrep:()=>{hostAcceptReply($('netRep').value);},nleave:()=>leaveNet(),
-  ncopy:w=>{const t=w==='code'?NET.code:w==='inv'?NET.inviteOut:NET.replyOut;try{navigator.clipboard.writeText(t).then(()=>toast('Copied!'),()=>toast('Select and copy the text manually'));}catch(e){toast('Select and copy the text manually');}return'keep';},
+  nshare:()=>{const url=inviteLink(),txt='Join my Rule Your Lands world! Room code '+NET.code;if(navigator.share)navigator.share({title:'Rule Your Lands',text:txt,url}).catch(()=>{});else{try{navigator.clipboard.writeText(txt+' '+url).then(()=>toast('Invite link copied!'));}catch(e){}}return'keep';},
+  ncopy:w=>{const t=w==='link'?inviteLink():w==='code'?NET.code:w==='inv'?NET.inviteOut:NET.replyOut;try{navigator.clipboard.writeText(t).then(()=>toast('Copied!'),()=>toast('Select and copy the text manually'));}catch(e){toast('Select and copy the text manually');}return'keep';},
   rvisit:id=>{NET.rshop=null;dlgView='rshop';netSend({t:'shopReq',to:id});},
   rbuy:i=>{const R=NET.rshop;const L=R&&R.shop&&R.shop.items[+i];if(!L||SV.gold<L.price)return;netSend({t:'buy',to:R.from,i:+i,id:L.id,price:L.price,qty:1});toast('Buying…');return'keep';},
 });
@@ -2784,7 +2802,7 @@ function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/10
 function idle(dt){D.flap+=dt*12;D.pos.set(P.pos.x+1.6,1.7+Math.sin(time*6)*.2,P.pos.z+1);D.face=P.face;drag.root.position.copy(D.pos);drag.root.rotation.y=D.face;const fl=Math.sin(D.flap);drag.wings[0].rotation.z=-.3+fl*.7;drag.wings[1].rotation.z=.3-fl*.7;
   hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;hero.capeP.rotation.x=.15+Math.sin(time*4)*.05;}
 requestAnimationFrame(loop);
-window.__G={gainFame,rankOf,hallEntries,GACT,get gEd(){return gEd;},showGInvite,guildMsg,get myPlate(){return myPlate;},openCustomize,get custMode(){return custMode;},COS,owns,defaultLook,PLOTS,HOMES,buildHome,get HOME(){return ACC.home;},homeCandidates,NET,hostInvite,joinInvite,hostAcceptReply,leaveNet,netSend,NODES,PROFACT,startGather,craftAlch,craftJewel,jSel,equipJewel,shopTick,itemValue,buildStall,get GEAR(){return gearBonus();},ZONES,OUTPOSTS,WAYS,teleport,zoneLevel,zoneIdx,openWorldMap,spawnEnemy,NPCS,openNpc,qEvent,invN,invAdd,inTown,get nearNpc(){return nearNpc;},rebuildHero,ACC,toggleMount,openMountPick,freeMountEligible,MOUNTS,get MOUNT(){return MOUNT;},P,get SV(){return SV;},enemies,spawnBoss,togglePanel,get boss(){return boss;},doAttack,useSkill,gainXp,CC,D2,openPromo,SK};
+window.__G={hostRoom,get NET(){return NET;},gainFame,rankOf,hallEntries,GACT,get gEd(){return gEd;},showGInvite,guildMsg,get myPlate(){return myPlate;},openCustomize,get custMode(){return custMode;},COS,owns,defaultLook,PLOTS,HOMES,buildHome,get HOME(){return ACC.home;},homeCandidates,NET,hostInvite,joinInvite,hostAcceptReply,leaveNet,netSend,NODES,PROFACT,startGather,craftAlch,craftJewel,jSel,equipJewel,shopTick,itemValue,buildStall,get GEAR(){return gearBonus();},ZONES,OUTPOSTS,WAYS,teleport,zoneLevel,zoneIdx,openWorldMap,spawnEnemy,NPCS,openNpc,qEvent,invN,invAdd,inTown,get nearNpc(){return nearNpc;},rebuildHero,ACC,toggleMount,openMountPick,freeMountEligible,MOUNTS,get MOUNT(){return MOUNT;},P,get SV(){return SV;},enemies,spawnBoss,togglePanel,get boss(){return boss;},doAttack,useSkill,gainXp,CC,D2,openPromo,SK};
 })();
 </script>
 </body>
