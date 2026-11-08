@@ -193,6 +193,7 @@ textarea.code{width:100%;height:64px;font:11px monospace;border-radius:8px;borde
 #mmTog{position:absolute;pointer-events:auto;top:calc(var(--mm) - 20px + env(safe-area-inset-top));right:calc(var(--mm) - 20px + env(safe-area-inset-right));width:30px;height:30px;border-radius:50%;border:2px solid #e8c56a;background:#1e2a44;color:#ffd56a;font:900 15px Nunito;z-index:2;padding:0}
 #zoomBtn small{position:absolute;bottom:-2px;right:-2px;font:900 9px Nunito;background:#e8c56a;color:#2a1a08;border-radius:6px;padding:0 3px}#zoomBtn{position:relative}.gbrow .pb{flex:1}
 #arts{position:fixed;left:0;right:0;bottom:0;z-index:12;display:flex;justify-content:center;pointer-events:none}
+#arts.compact{top:auto!important;justify-content:center!important;align-items:flex-end!important}#arts.compact .artp{width:min(96vw,640px)!important;margin:0!important;border-radius:14px 14px 0 0!important;padding:6px 10px 8px;max-height:none}#arts.compact .arth{font-size:13px;margin:0 30px 4px}#arts.compact .chips{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start!important;padding-bottom:2px}#arts.compact .chip{flex:none}#arts.compact .arttip{margin-top:3px}
 #arts .artp{pointer-events:auto;position:relative;width:min(560px,100vw);background:linear-gradient(180deg,#1e2a44ee,#121a2cf6);border:2px solid #e8c56a;border-bottom:0;border-radius:16px 16px 0 0;padding:10px 12px 14px;color:#fff;font:700 13px Nunito;max-height:62vh;overflow-y:auto}
 @media (orientation:landscape){#arts{justify-content:flex-end;top:0;align-items:center}#arts .artp{width:min(48vw,460px);border-radius:16px;border:2px solid #e8c56a;margin-right:10px;max-height:94vh}}
 .artx{position:absolute;right:8px;top:6px;background:#0006;border:1px solid #fff4;color:#fff;border-radius:50%;width:30px;height:30px;font-size:14px}
@@ -2774,8 +2775,8 @@ let noteTex=null;function noteFx(x,y,z,col){if(!noteTex){const cv=document.creat
 
 /* ----- shared activity state ----- */
 let ART=null,artLastZone=-1,artZoneT=0,artPassT=240,artFreeT=0;
-function artOverlay(html){const el=$('arts');el.classList.remove('hidden');$('artsBody').innerHTML=html;}
-function artClose(){$('arts').classList.add('hidden');$('artsBody').innerHTML='';$('filmHud').classList.add('hidden');if(ART&&ART.k==='film'){}ART=null;artProp(hero,null);}
+function artOverlay(html,compact){const el=$('arts');el.classList.remove('hidden');el.classList.toggle('compact',!!compact);$('artsBody').innerHTML=html;}
+function artClose(){$('arts').classList.add('hidden');if(ART&&ART.hidDrag&&drag)drag.root.visible=true;if(camera.near>1&&!custMode){camera.near=.5;camera.updateProjectionMatrix();}$('artsBody').innerHTML='';$('filmHud').classList.add('hidden');if(ART&&ART.k==='film'){}ART=null;artProp(hero,null);}
 function artCancel(msg){if(!ART)return;if(ART.k==='music'&&ART.song)toast('Performance stopped');if(msg)toast(msg);artClose();}
 const artState=()=>!ART?'':ART.k==='music'?'m:'+ART.inst:ART.k==='chef'?'c':ART.k==='writer'?'w':ART.k==='film'?'f':ART.k==='dance'?'d:'+(ART.mv||'sway'):'';
 function artFrame(dt){if(!SV||!playing)return;
@@ -2783,7 +2784,7 @@ function artFrame(dt){if(!SV||!playing)return;
   if(!ART)return;{const now=performance.now();dt=Math.min(.3,(now-(ART.rl||now))/1000);ART.rl=now;}ART.t+=dt;
   const mov=Math.hypot(inp.x,inp.z)>.15;
   if(ART.k!=='film'&&(mov||P.dead||P.hp<ART.hp0-1)){artCancel(mov?null:'Interrupted!');return;}
-  if(ART.k!=='film'){artPose(hero,artState(),ART.t);if(!paused){const a=ART.t*.25,d=ART.k==='dance'?6:5;camera.position.set(P.pos.x+Math.sin(a)*d,2.6,P.pos.z+Math.cos(a)*d);camera.lookAt(P.pos.x,1.1,P.pos.z);}}
+  if(ART.k!=='film'){if(drag&&drag.root.visible){drag.root.visible=false;ART.hidDrag=true;}artPose(hero,artState(),ART.t);if(!paused){const comp=$('arts').classList.contains('compact'),land=camera.aspect>1,yaw=Math.sin(ART.t*.35)*.45,d=(ART.k==='dance'?7.5:6.5)*(land?1:1.25);if(camera.near<2){camera.near=2.4;camera.updateProjectionMatrix();}const rx=Math.cos(yaw),rz=-Math.sin(yaw),sh=comp?0:land?1.7:0,ty=comp?(land?.7:1.4):(land?1.1:-.4);camera.position.set(P.pos.x+Math.sin(yaw)*d+rx*sh,3.0,P.pos.z+Math.cos(yaw)*d+rz*sh);camera.lookAt(P.pos.x+rx*sh,ty,P.pos.z+rz*sh);}}
   if(ART.k==='music')musicFrame(dt);else if(ART.k==='chef')cookFrame(dt);else if(ART.k==='writer')writeFrame(dt);else if(ART.k==='dance')danceFrame(dt);else if(ART.k==='film')filmFrame(dt);}
 function remoteArt(r,dt){if(!r.ar)return artProp(r.h,null);const k=r.ar.split(':');artProp(r.h,k[0]==='m'?k[1]:k[0]==='c'?'chef':k[0]==='w'?'write':k[0]==='f'?'film':null);r.art_t=(r.art_t||0)+dt;artPose(r.h,r.ar,r.art_t);
   if(k[0]==='m'&&Math.random()<dt*3)noteFx(r.x,2.3+r.y,r.z,[0xffe080,0x9ae0ff,0xff9ad0][Math.random()*3|0]);if(k[0]==='c'&&Math.random()<dt*6)part(r.x+Math.sin(r.f)*.6,1.3,r.z+Math.cos(r.f)*.6,0,1,0,0xf0f0f0,.3,.8,{normal:true,op:.4});}
@@ -2868,7 +2869,7 @@ function finishFilm(){const A=ART;if(!A)return;const q=A.slots.reduce((s,x)=>s+x
 
 /* ----- DANCE: freestyle + routines ----- */
 const movesOwned=()=>MOVES.filter(m=>callLv('dance')>=m[2]);
-function startFree(mv){if(!artAllowed())return;closeDlg();ART={k:'dance',t:0,mv,free:true,hp0:P.hp,tick:0};artProp(hero,null);artOverlay(`<div class="arth">💃 ${MOVES.find(m=>m[0]===mv)[1]}</div><div class="chips" style="justify-content:center">${movesOwned().map(m=>`<button class="chip ${m[0]===mv?'sel':''}" data-dm="${m[0]}">${m[1]}</button>`).join('')}</div><div class="arttip">Move the joystick to stop dancing</div>`);}
+function startFree(mv){if(!artAllowed())return;closeDlg();ART={k:'dance',t:0,mv,free:true,hp0:P.hp,tick:0};artProp(hero,null);artOverlay(`<div class="arth">💃 ${MOVES.find(m=>m[0]===mv)[1]}</div><div class="chips" style="justify-content:center">${movesOwned().map(m=>`<button class="chip ${m[0]===mv?'sel':''}" data-dm="${m[0]}">${m[1]}</button>`).join('')}</div><div class="arttip">Move the joystick to stop dancing</div>`,true);}
 const ARR=['⬅️','⬆️','⬇️','➡️'];
 function startRoutine(){if(!artAllowed())return;closeDlg();const lv=callLv('dance');ART={k:'dance',t:0,t0:performance.now(),mv:'sway',routine:true,round:0,rounds:6,ok:0,onb:0,taps:0,hp0:P.hp,bpm:100+lv*1.2,len:Math.min(6,3+Math.floor(lv/6))};nextRoutine();}
 function nextRoutine(){const A=ART;if(A.round>=A.rounds){finishRoutine();return;}A.seq=Array.from({length:A.len},()=>Math.random()*4|0);A.idx=0;A.err=false;
@@ -3293,14 +3294,14 @@ function buildStage(){stageG=new THREE.Group();const plank=std(0x8a5a2a),dark=st
   add(GEO.box,red,0,4.6,-STAGE.d/2+.1,STAGE.w,.8,.3);
   const sign=document.createElement('canvas');sign.width=512;sign.height=96;const g=sign.getContext('2d');g.fillStyle='#3a1a08';g.fillRect(0,0,512,96);g.strokeStyle='#e8c56a';g.lineWidth=6;g.strokeRect(4,4,504,88);g.font='900 52px Cinzel, serif';g.fillStyle='#ffd56a';g.textAlign='center';g.fillText('THE EMBER STAGE',256,66);
   const sm=new THREE.Mesh(new THREE.PlaneGeometry(5,.95),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sign)}));sm.position.set(STAGE.x,5.45,STAGE.z-STAGE.d/2+.3);stageG.add(sm);
-  for(const s of[-1,1]){const sp=new THREE.Mesh(new THREE.ConeGeometry(2.2,6,24,1,true),new THREE.MeshBasicMaterial({color:0xfff0b0,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));sp.position.set(STAGE.x+s*2.5,3,STAGE.z);stageG.add(sp);stageSpots.push(sp);}
+  for(const s of[-1,1]){const sp=new THREE.Mesh(new THREE.ConeGeometry(1.3,6,24,1,true),new THREE.MeshBasicMaterial({color:0xfff0b0,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));sp.position.set(STAGE.x+s*2.5,3,STAGE.z);stageG.add(sp);stageSpots.push(sp);}
   scene.add(stageG);for(let i=-4;i<=4;i++)obstacles.push({x:STAGE.x+i*1.2,z:STAGE.z-STAGE.d/2-.3,r:.7});
   const pal=[{skin:0xf0c8a0,hair:0x5a3a1a,tunic:0x6a4a8a,cape:0x3a6a8a,armor:0xc8c0b0},{skin:0xd8a880,hair:0x1a1a1a,tunic:0x8a3a2a,cape:0xe8b84a,armor:0xb0a090},{skin:0xf4d8c0,hair:0xe8c040,tunic:0x2a6a4a,cape:0xa02a4a,armor:0xd0d0c0},{skin:0xc89070,hair:0x8a3a1a,tunic:0x4a4a7a,cape:0x7a9a3a,armor:0xb8b0a0}];
   for(let i=0;i<7;i++){const a=(i/6-.5)*2.2,x=STAGE.x+Math.sin(a)*6.5,z=STAGE.z+1.5+Math.cos(a)*4.2;const h=makeHero({key:'npc',wpn:'none',shield:false,pal:pal[i%4]});h.root.position.set(x,0,z);h.root.rotation.y=Math.atan2(STAGE.x-x,STAGE.z-z);h.root.visible=false;h.root.scale.setScalar(.92);stageFans.push({h,ph:Math.random()*9});}}
 function stageFrame(dt){if(!stageG){if(typeof NPCS!=='undefined'&&NPCS.length)buildStage();return;}
   let perf=ART&&(ART.k==='music'||ART.k==='dance')&&onStage(P.pos.x,P.pos.z)?1:0;for(const r of NET.remotes.values())if(r.ar&&(r.ar[0]==='m'||r.ar[0]==='d')&&onStage(r.x,r.z))perf++;
   const on=perf>0&&!INST;if(on!==stageOn){stageOn=on;for(const f of stageFans)f.h.root.visible=on;if(on){toast('🎭 The crowd gathers at the Ember Stage!');}}
-  for(const s of stageSpots){s.material.opacity=lerp(s.material.opacity,on?.12+Math.sin(time*3)*.04:0,dt*4);s.rotation.z=Math.sin(time*.8+s.position.x)*.25;}
+  for(const s of stageSpots){s.material.opacity=lerp(s.material.opacity,on?.07+Math.sin(time*3)*.025:0,dt*4);s.rotation.z=Math.sin(time*.8+s.position.x)*.25;}
   if(on){for(const f of stageFans){f.ph+=dt*6;f.h.body.position.y=Math.abs(Math.sin(f.ph))*.18;f.h.armL.rotation.set(-2.6+Math.sin(f.ph)*.4,0,-.2);f.h.armR.rotation.set(-2.6-Math.sin(f.ph)*.4,0,.2);}
     if(Math.random()<dt*10)part(STAGE.x+rand(-4.5,4.5),rand(4,6),STAGE.z+rand(-1.5,1.5),rand(-1,1),rand(-1,0),rand(-1,1),[0xff4a6a,0xffd040,0x4ad0ff,0x8aff6a][Math.random()*4|0],.25,1.6,{normal:true,g:2});}}
 function stageBonus(){if(!onStage(P.pos.x,P.pos.z)||INST)return 1;let n=0;for(const r of NET.remotes.values())if(r.ar&&(r.ar[0]==='m'||r.ar[0]==='d')&&onStage(r.x,r.z))n++;return 1.5+.3*n;}
