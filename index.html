@@ -11,7 +11,7 @@
 html,body{margin:0;height:100%;overflow:hidden;background:#000;touch-action:none;user-select:none;-webkit-user-select:none;font-family:Nunito,system-ui,sans-serif;color:#fff}
 canvas#game{position:fixed;inset:0;width:100%;height:100%;display:block}
 .hidden{display:none!important}
-#hud{position:fixed;inset:0;pointer-events:none}
+#hud{position:fixed;inset:0;pointer-events:none;--mm:100px}#hud.mmbig{--mm:168px}
 #hud button{pointer-events:auto}
 #tl{position:absolute;top:calc(8px + env(safe-area-inset-top));left:calc(8px + env(safe-area-inset-left));display:flex;gap:8px;align-items:flex-start}
 #portrait{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#5b7fb0,#1d2b44);border:3px solid #e8c56a;box-shadow:0 2px 8px #0008;position:relative;display:grid;place-items:center;font-size:30px;pointer-events:auto;cursor:pointer}
@@ -32,9 +32,9 @@ canvas#game{position:fixed;inset:0;width:100%;height:100%;display:block}
 #buffs{display:flex;gap:4px;flex-wrap:wrap;max-width:190px}
 .bf{font-size:13px;background:#000a;border:1px solid #e8c56a88;border-radius:6px;padding:0 4px;line-height:18px}
 .bf small{font-size:9px;margin-left:2px}
-#topbtns{position:absolute;top:calc(8px + env(safe-area-inset-top));right:calc(146px + env(safe-area-inset-right));display:flex;gap:6px}
+#topbtns{position:absolute;top:calc(8px + env(safe-area-inset-top));right:calc(var(--mm) + 16px + env(safe-area-inset-right));display:flex;gap:6px}
 .tbtn{width:38px;height:38px;border-radius:50%;border:2px solid #e8c56a;background:#1d2b44cc;color:#ffe9a8;font-size:18px;display:grid;place-items:center;padding:0;box-shadow:0 2px 6px #0008;position:relative}
-#mini{position:absolute;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));width:130px;height:130px;border-radius:12px;border:3px solid #e8c56a;box-shadow:0 2px 10px #0009;background:#000}
+#mini{position:absolute;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));width:var(--mm);height:var(--mm);border-radius:12px;border:3px solid #e8c56a;transition:width .2s,height .2s;box-shadow:0 2px 10px #0009;background:#000}
 #boss{position:absolute;top:calc(84px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(64vw,420px);text-align:center}
 #bossName{font-family:Cinzel,serif;font-weight:900;font-size:15px;letter-spacing:2px;color:#ffd0a0;text-shadow:0 0 8px #f40,0 2px 2px #000}
 .bbar{height:16px;border:2px solid #2a0a06;border-radius:4px;background:#2a0a06cc;position:relative;overflow:hidden;margin-top:3px;box-shadow:0 0 12px #f405}
@@ -89,8 +89,8 @@ canvas#game{position:fixed;inset:0;width:100%;height:100%;display:block}
 .ov::before,.ov::after{content:'';flex:1 0 0;min-height:0}
 .ov>*{flex-shrink:0}
 #dlg .panel{max-height:none!important;overflow:visible!important}
-@media (orientation:portrait){#topbtns{right:calc(8px + env(safe-area-inset-right));top:calc(186px + env(safe-area-inset-top));width:130px;justify-content:space-between;gap:0}
-  #hud #qtrack{top:calc(232px + env(safe-area-inset-top))}#hud #combo{top:calc(300px + env(safe-area-inset-top))}#hud #topbtns{right:calc(8px + env(safe-area-inset-right))}}
+@media (orientation:portrait){#topbtns{right:calc(8px + env(safe-area-inset-right));top:calc(var(--mm) + 56px + env(safe-area-inset-top));width:max(var(--mm),130px);justify-content:space-between;gap:0}
+  #hud #qtrack{top:calc(var(--mm) + 102px + env(safe-area-inset-top))}#hud #combo{top:calc(var(--mm) + 170px + env(safe-area-inset-top))}#hud #topbtns{right:calc(8px + env(safe-area-inset-right))}}
 @media (max-height:560px){.panel{padding:10px 14px}.panel h3{margin-bottom:6px;font-size:16px}.row{padding:5px 0}.pb{padding:5px 10px}.pb.close{margin-top:8px}.mrow,.brow,.skr{padding:5px 0}.stat{padding:3px 0}.say{margin:2px 0 6px}#start h1{font-size:clamp(28px,7vw,60px)}#start h2{margin:2px 0 10px}#start p{margin-top:10px}}
 #start{background:radial-gradient(ellipse at 50% 40%,#3a2a12cc,#0a0604f2 75%)}
 #start h1{font-family:Cinzel,serif;font-weight:900;font-size:clamp(34px,10vw,86px);margin:0;letter-spacing:3px;line-height:1.05;background:linear-gradient(#fff6c8,#f0b040 55%,#a0501a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #3a1500) drop-shadow(0 0 30px #f805)}
@@ -141,7 +141,7 @@ canvas#game{position:fixed;inset:0;width:100%;height:100%;display:block}
 .mrow .mi{font-size:32px;text-align:center}.mrow b{font-size:14px}.mrow small{display:block;font-size:11px;opacity:.75;line-height:1.3}
 .mrow .sp{font-size:10px;color:#9fe0a0;font-weight:800}
 .pb.gold{background:linear-gradient(#ffcf5a,#c07a14);color:#3a1a00}
-#zoneTag{position:absolute;right:calc(8px + env(safe-area-inset-right));top:calc(144px + env(safe-area-inset-top));width:130px;text-align:center;font-size:12px;font-weight:900;color:#fff;text-shadow:0 1px 3px #000;background:#0008;border-radius:8px;padding:2px 4px;line-height:1.25}
+#zoneTag{position:absolute;right:calc(8px + env(safe-area-inset-right));top:calc(var(--mm) + 14px + env(safe-area-inset-top));width:max(var(--mm),120px);text-align:center;font-size:12px;font-weight:900;color:#fff;text-shadow:0 1px 3px #000;background:#0008;border-radius:8px;padding:2px 4px;line-height:1.25}
 #zoneTag small{display:block;font-size:10.5px}
 #wmapC{width:min(92vw,80vh);height:min(92vw,80vh);border-radius:50%;box-shadow:0 0 0 4px #e8c56a,0 10px 40px #000}
 #mini{cursor:pointer;pointer-events:auto}
@@ -179,7 +179,33 @@ textarea.code{width:100%;height:64px;font:11px monospace;border-radius:8px;borde
 #custom::after{flex:0 0 0}
 #custom .panel{max-width:540px;max-height:57vh;overflow-y:auto;border-radius:16px 16px 0 0;margin-top:auto}
 @media (orientation:landscape){#custom{align-items:flex-end;background:linear-gradient(90deg,transparent 40%,#000a)}#custom::before,#custom::after{flex:1 0 0}#custom .panel{max-height:94vh;width:min(50vw,480px);border-radius:16px;margin-right:10px}}
-.gbrow{display:flex;gap:6px}.gbrow .pb{flex:1}
+.gbrow{display:flex;gap:6px}
+#mmTog{position:absolute;pointer-events:auto;top:calc(var(--mm) - 20px + env(safe-area-inset-top));right:calc(var(--mm) - 20px + env(safe-area-inset-right));width:30px;height:30px;border-radius:50%;border:2px solid #e8c56a;background:#1e2a44;color:#ffd56a;font:900 15px Nunito;z-index:2;padding:0}
+#zoomBtn small{position:absolute;bottom:-2px;right:-2px;font:900 9px Nunito;background:#e8c56a;color:#2a1a08;border-radius:6px;padding:0 3px}#zoomBtn{position:relative}.gbrow .pb{flex:1}
+#arts{position:fixed;left:0;right:0;bottom:0;z-index:12;display:flex;justify-content:center;pointer-events:none}
+#arts .artp{pointer-events:auto;position:relative;width:min(560px,100vw);background:linear-gradient(180deg,#1e2a44ee,#121a2cf6);border:2px solid #e8c56a;border-bottom:0;border-radius:16px 16px 0 0;padding:10px 12px 14px;color:#fff;font:700 13px Nunito;max-height:62vh;overflow-y:auto}
+@media (orientation:landscape){#arts{justify-content:flex-end;top:0;align-items:center}#arts .artp{width:min(48vw,460px);border-radius:16px;border:2px solid #e8c56a;margin-right:10px;max-height:94vh}}
+.artx{position:absolute;right:8px;top:6px;background:#0006;border:1px solid #fff4;color:#fff;border-radius:50%;width:30px;height:30px;font-size:14px}
+.arth{font:900 16px Cinzel,serif;color:#ffd56a;text-align:center;margin:2px 30px 8px}.arth span{font:800 12px Nunito;color:#fff;opacity:.8;margin-left:6px}.arttip{font-size:11px;opacity:.6;text-align:center;margin-top:6px}
+#mLanes{position:relative;height:190px;display:flex;gap:6px;background:#0005;border-radius:10px;overflow:hidden}#mLanes .lane{flex:1;position:relative;border-left:1px solid #fff1;border-right:1px solid #fff1}
+.note{position:absolute;left:50%;top:0;width:44px;height:16px;margin-left:-22px;border-radius:9px;background:linear-gradient(#fff,#ffd56a);box-shadow:0 0 10px #fc6;opacity:0}
+.note.perf{background:#fff;box-shadow:0 0 22px #ffe080}.note.good{background:#9ae0ff;box-shadow:0 0 14px #6cf}.note.miss{background:#844;box-shadow:none}
+.hitline{position:absolute;left:0;right:0;bottom:18px;height:4px;background:#ffd56a;box-shadow:0 0 12px #fc6}
+.mbtns,.dbtns{display:flex;gap:6px;margin-top:8px}.mb{flex:1;height:64px;font-size:26px;border-radius:12px;border:2px solid #e8c56a;background:#3a2a10;color:#fff;touch-action:manipulation}.mb.hit{background:#ffd56a;color:#3a2a10}
+#mScore{color:#ffe080}
+.cstep{text-align:center;font:900 22px Cinzel,serif;color:#fff;margin:4px 0}.cbar{position:relative;height:30px;border-radius:15px;background:#5a1a10;border:2px solid #0008;margin:10px 0;overflow:hidden}
+.cz{position:absolute;top:0;bottom:0;background:#2a9a3a}.cg{position:absolute;top:0;bottom:0;background:#ffd56a}.cn{position:absolute;top:-2px;bottom:-2px;width:6px;margin-left:-3px;background:#fff;box-shadow:0 0 8px #fff}
+.cres{text-align:center;font-size:22px;min-height:28px}.pb.big{font-size:20px;padding:16px}
+.wlines{font:italic 600 13px Georgia,serif;color:#f4ecd8;min-height:54px;background:#f4ecd810;border-radius:8px;padding:6px 10px;margin-bottom:6px}.wprompt{text-align:center;font-size:15px;margin:4px 0}
+.wtimer{height:6px;background:#0006;border-radius:3px;overflow:hidden;margin:6px 0}.wtimer i{display:block;height:100%;background:#ffd56a;width:100%}.wopts{display:grid;grid-template-columns:1fr 1fr;gap:6px}.wopts .pb{font-size:17px;padding:12px}
+.dseq{display:flex;justify-content:center;gap:6px;font-size:30px;margin:6px 0}.dseq span{opacity:.55;transition:.1s}.dseq span.ok{opacity:1;filter:drop-shadow(0 0 6px #ffd56a)}.dseq span.meh{opacity:1}.dseq span.bad{opacity:1;filter:grayscale(1) brightness(.5)}
+.dbeat{width:22px;height:22px;border-radius:50%;background:#ff9ad0;margin:2px auto;box-shadow:0 0 12px #ff9ad0}
+#filmHud{position:fixed;inset:0;z-index:9;pointer-events:none}#filmHud .fc{position:absolute;width:44px;height:44px;border:4px solid #fff;opacity:.85}
+.fc.tl{left:18%;top:16%;border-right:0;border-bottom:0}.fc.tr{right:18%;top:16%;border-left:0;border-bottom:0}.fc.bl{left:18%;bottom:22%;border-right:0;border-top:0}.fc.br{right:18%;bottom:22%;border-left:0;border-top:0}
+.frec{position:absolute;left:50%;top:12%;transform:translateX(-50%);color:#ff4a4a;font:900 13px Nunito;text-shadow:0 1px 3px #000;animation:blink 1s infinite}@keyframes blink{50%{opacity:.2}}
+#filmList{position:absolute;left:50%;top:calc(12% + 18px);transform:translateX(-50%);background:#000a;border-radius:10px;padding:6px 10px;color:#fff;font:700 12px Nunito;white-space:nowrap}#filmList .ok{color:#9fff9a}
+#filmShutter{pointer-events:auto;position:absolute;right:22px;top:46%;width:74px;height:74px;border-radius:50%;border:4px solid #fff;background:#d02a2a;font-size:28px}
+#filmExit{pointer-events:auto;position:absolute;right:36px;top:calc(46% + 84px);width:46px;height:46px;border-radius:50%;border:2px solid #fff;background:#0008;color:#fff;font-size:18px}
 .dn.ally{color:#9fd8ff;font-size:17px}.dn.crit.ally{font-size:26px;color:#8ae0ff}
 .dn.fame{color:#ffb8ff;font-size:14px}
 img.emb{vertical-align:-3px;display:inline-block}
@@ -214,12 +240,13 @@ img.emb{vertical-align:-3px;display:inline-block}
       <div id="buffs"></div>
     </div>
   </div>
-  <div id="sideBtns"><button class="tbtn" id="netBtn" title="Multiplayer">🌐</button><button class="tbtn hidden" id="chatBtn" title="Chat (Enter)">💬</button></div>
+  <div id="sideBtns"><button class="tbtn" id="netBtn" title="Multiplayer">🌐</button><button class="tbtn hidden" id="chatBtn" title="Chat (Enter)">💬</button><button class="tbtn hidden" id="artBtn" title="Callings">🎭</button><button class="tbtn" id="zoomBtn" title="Zoom (scroll, pinch, or Z)">🔍<small>1×</small></button></div>
   <div id="chatLog"></div>
   <div id="chatBar" class="hidden"><input id="chatIn" maxlength="120" placeholder="Say something…"><button class="pb gold" id="chatSend">Send</button></div>
   <div id="topbtns"><button class="tbtn" id="chBtn" title="Character (C)">👤</button><button class="tbtn" id="upBtn" title="Forge (U)">⚒</button><button class="tbtn" id="setBtn" title="Settings (Esc)">⚙</button></div>
   <canvas id="mini" width="240" height="240" title="Tap for world map (M)"></canvas>
   <div id="zoneTag"></div>
+  <button id="mmTog" title="Bigger / smaller map (N)">⤢</button>
   <div id="boss" class="hidden"><div id="bossName">CINDERHORN</div><div class="bbar"><em id="bossLag"></em><i id="bossf"></i></div></div>
   <div id="combo"></div>
   <div id="qtrack"></div>
@@ -254,6 +281,8 @@ img.emb{vertical-align:-3px;display:inline-block}
 
 <div id="classSel" class="ov sel hidden"></div>
 <div id="ginv" class="hidden"></div>
+<div id="arts" class="hidden"><div class="artp"><button class="artx" data-ax="1">✖</button><div id="artsBody"></div></div></div>
+<div id="filmHud" class="hidden"><i class="fc tl"></i><i class="fc tr"></i><i class="fc bl"></i><i class="fc br"></i><div class="frec">● REC</div><div id="filmList"></div><button id="filmShutter">📸</button><button id="filmExit">✖</button></div>
 <div id="custom" class="ov hidden"><div class="panel"><h3>✨ YOUR HERO</h3><div id="customBody"></div></div></div>
 <div id="mountPick" class="ov sel hidden"></div>
 <div id="promo" class="ov sel hidden"></div>
@@ -1515,7 +1544,7 @@ function openPromo(){if(CC().tier!==1||!playing)return;const c=CC();paused=true;
     ringFx(P.pos.x,P.pos.z,8,0xffd060,1);pillar(P.pos.x,P.pos.z,2,24,0xffe080,1.6);screenFlash('#fff0c0',.45,.8);refreshMountBtn();
     if(freeMountEligible())setTimeout(openMountPick,2200);});}
 function ensureLook(){SV.fame=SV.fame||0;if(SV.guild&&!ACC.guilds[SV.guild.id])SV.guild=null;if(SV.look)for(const k of['trail','glow','orbit'])if(!SV.look[k]||!COS[k][SV.look[k]])SV.look[k]='none';if(SV.look&&typeof SV.look.cape!=='number')SV.look.cape=PAL[CL[SV.cls].parent||SV.cls].cape;if(!SV.look){SV.look=defaultLook(SV.cls);SV.freeRename=true;for(const k of starterUnlocks(SV.cls))if(!ACC.wardrobe.includes(k))ACC.wardrobe.push(k);saveAcc();}if(!SV.name)SV.name=CL[SV.cls].n;}
-function rebuildHero(){ensureLook();cnameK='';updNameplate();refreshMountBtn();if(hero){scene.remove(hero.root);}hero=makeHero(CC(),SV.look);hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;applyShadows();refreshSkillBtns();
+function rebuildHero(){ensureLook();cnameK='';updNameplate();refreshArtBtn();refreshMountBtn();if(hero){scene.remove(hero.root);}hero=makeHero(CC(),SV.look);hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;applyShadows();refreshSkillBtns();
   $('pIcon').textContent=CL[SV.cls].ic;$('atkIc').textContent={sword:'⚔️',greatsword:'🗡️',axe:'🪓',greataxe:'🪓',mace:'🔨',daggers:'🔪',claws:'🐾',bow:'🏹',staff:'🪄',rune:'🔯',gun:'🔫'}[CC().wpn];}
 function refreshSkillBtns(){if(!SV)return;const c=CC();for(let i=0;i<4;i++){const b=$('k'+(i+1)),id=c.sk[i];const un=SV.lv>=UNLOCK[i]&&id;
   b.querySelector('.ic').textContent=id?SK[id].ic:'🔒';b.classList.toggle('lock',!un);b.querySelector('.mpc').textContent=un?skillCost(id):'Lv '+UNLOCK[i];b.title=id?SK[id].n:'';}}
@@ -1563,6 +1592,7 @@ const NPCDEF=[
   {id:'orla',n:'Orla',role:'Vaultkeeper',ic:'💰',x:-9,z:-3,svc:'bank',awn:0x2a5aa0,pal:{skin:0xe8c098,hair:0x8a8a90,tunic:0x2a3a6a,cape:0x1a2a4a,armor:0xd8b860,robe:true},line:'Gold, treasures and even mounts — whatever you leave with me is shared by every hero on your account.'},
   {id:'pell',n:'Pell',role:'Alchemist',ic:'🧪',x:9,z:-3,svc:'potions',awn:0x2a8a4a,pal:{skin:0xf0c8a0,hair:0xc85a2a,tunic:0x3a6a3a,cape:0x5aaa5a,armor:0x8a6a4a},line:'Potions, fresh from the cauldron! Mind the fumes, they make your eyebrows itch.'},
   {id:'senna',n:'Archivist Senna',role:'Skill Tomes',ic:'📘',x:-9,z:5,svc:'books',awn:0x6a3a9a,pal:{skin:0xdab090,hair:0x1a1a2a,tunic:0x4a2a6a,cape:0x7a4aaa,armor:0xc0a0e0,robe:true},line:'Training takes a skill only so far. These tomes carry it the rest of the way — rank 6 and beyond.'},
+  {id:'lyra',n:'Maestra Lyra',role:'Patron of the Arts',ic:'🎭',x:-13,z:9.5,svc:'arts',quest:true,awn:0x6a4ac0,pal:{skin:0xe8c0a0,hair:0x2a1a3a,tunic:0x4a2a7a,cape:0xe8b84a,armor:0xd8c8f0,robe:true},line:'Not every legend is written in blood, darling. Some are sung, cooked, danced… or filmed.'},
   {id:'velour',n:'Velour',role:'Tailor & Stylist',ic:'👗',x:13,z:9.5,svc:'style',awn:0xc04a8a,pal:{skin:0xf0c8a8,hair:0xd04a8a,tunic:0x6a2a6a,cape:0xd06aa0,armor:0xe8c8e0,robe:true},line:'Darling, that look simply will not do. Let me fix you up — new hair, new colors, a little sparkle.'},
   {id:'tamsin',n:'Guildmaster Tamsin',role:'Specialty Trainer',ic:'🎓',x:0,z:-15.5,svc:'guild',awn:0x2a7a6a,pal:{skin:0xd8a880,hair:0x2a1a10,tunic:0x2a5a4a,cape:0x3a8a6a,armor:0xc8b070,robe:true},line:'Herbs, potions, ore and gems — a trade will serve you long after your sword dulls.'},
   {id:'durgan',n:'Durgan',role:'Blacksmith',ic:'⚒️',x:9,z:5,svc:'forge',awn:0x8a3a1a,pal:{skin:0xc89070,hair:0x3a2010,tunic:0x4a3a2a,cape:0x5a4a3a,armor:0x6a6a70,scale:1.1},line:'Steel sharpened, armor hammered, dragons… fed. Gold first.'},
@@ -1608,14 +1638,14 @@ function buildNPCs(){buildTownProps();
       const aw=new THREE.Mesh(GEO.box,std(d.awn));aw.scale.set(3,.08,2.1);aw.position.set(0,2.6,.05);aw.rotation.x=.18;aw.castShadow=true;g.add(aw);
       for(let i=0;i<5;i++){const st=new THREE.Mesh(GEO.box,std(i%2?0xf2ead8:d.awn));st.scale.set(.6,.25,.05);st.position.set(-1.2+i*.6,2.42,1.1);g.add(st);}
       const ct=new THREE.Mesh(GEO.box,std(0x8a6038));ct.scale.set(2.6,.9,.7);ct.position.set(0,.45,.6);ct.castShadow=true;g.add(ct);
-      const wares={bank:0xffd34a,potions:0xff4a6a,books:0x6a8aff,forge:0x9aa0aa,stable:0xd8b070,guild:0x6ad0a0,style:0xff80c0}[d.svc];
+      const wares={bank:0xffd34a,potions:0xff4a6a,books:0x6a8aff,forge:0x9aa0aa,stable:0xd8b070,guild:0x6ad0a0,style:0xff80c0,arts:0xa080ff}[d.svc];
       for(let i=0;i<4;i++){const w=new THREE.Mesh(d.svc==='potions'?GEO.cyl:GEO.box,std(i%2&&d.svc==='potions'?0x4a9aff:wares,{emissive:d.svc==='bank'?0x5a3a00:0}));w.scale.setScalar(.22);w.position.set(-.8+i*.5,1.02,.6);g.add(w);}
       scene.add(g);obstacles.push({x:bx,z:bz,r:1.3});}
     obstacles.push({x:d.x,z:d.z,r:.55});
     NPCS.push({d,h,lab,mk,face,bob:rand(0,9)});}}
 function npcState(n){if(!n.d.quest)return null;const L=SV.lv;let st=null;
   for(const id in SV.quests){const q=QBY[id];if(q.g!==n.d.id)continue;if(SV.quests[id].p>=q.n)return'done';st='prog';}
-  if(Object.keys(SV.quests).length<MAXQ&&QDEF.some(q=>q.g===n.d.id&&L>=q.min&&L<=q.max&&!SV.quests[q.id]))return'avail';return st;}
+  if(Object.keys(SV.quests).length<MAXQ&&QDEF.some(q=>q.g===n.d.id&&qOk(q,L)&&!SV.quests[q.id]))return'avail';return st;}
 let nearNpc=null,wasTown=null;
 function updNPCs(dt){let best=null,bd=3.4;
   for(const n of NPCS){const dx=P.pos.x-n.d.x,dz=P.pos.z-n.d.z,d=Math.hypot(dx,dz);
@@ -1634,7 +1664,7 @@ function updNPCs(dt){let best=null,bd=3.4;
 const inTown=p=>Math.hypot(p.x,p.z)<TOWN_R;
 
 /* ---------------- quests ---------------- */
-function qEvent(type,val){if(!SV||!SV.quests)return;for(const id in SV.quests){const q=QBY[id],s=SV.quests[id];if(q.type!==type||s.p>=q.n)continue;
+function qEvent(type,val){if(!SV||!SV.quests)return;if(type==='outpost')artInsp(2);else if(type==='boss')artInsp(1);for(const id in SV.quests){const q=QBY[id],s=SV.quests[id];if(q.type!==type||s.p>=q.n)continue;
   if(type==='kill'){if(q.target!=='any'&&q.target!==val)continue;if(q.target==='any'&&val==='boss')continue;s.p++;}
   else if(type==='combo')s.p=Math.max(s.p,val);else s.p++;
   if(s.p>=q.n){s.p=q.n;toast('✅ '+q.t+' complete — return to '+NPCDEF.find(n=>n.id===q.g).n);SFX.chest();}}}
@@ -1643,7 +1673,7 @@ function acceptQ(id){if(Object.keys(SV.quests).length>=MAXQ){toast('Quest log fu
 function turnIn(id){const q=QBY[id],s=SV.quests[id];if(!s||s.p<q.n)return;const r=qReward(q);delete SV.quests[id];SV.qdone[id]=(SV.qdone[id]||0)+1;
   SV.gold+=r.gold;let got=[];for(const k in r.items){const n=invAdd(k,r.items[k]);if(n)got.push(itemInfo(k).ic+'×'+n);}
   if(r.book){const un=CC().sk.filter((k,i)=>SV.lv>=UNLOCK[i]);const k=un[Math.floor(Math.random()*un.length)];if(invAdd('book:'+k,1))got.push('📘 '+SK[k].n);}
-  banner('QUEST COMPLETE<small>'+q.t.toUpperCase()+' · +'+r.gold+' ◆'+(got.length?' · '+got.join(' '):'')+'</small>',3);SFX.level();gainXp(r.xp);gainFame(10+SV.lv,P.pos);
+  banner('QUEST COMPLETE<small>'+q.t.toUpperCase()+' · +'+r.gold+' ◆'+(got.length?' · '+got.join(' '):'')+'</small>',3);SFX.level();gainXp(r.xp);gainFame(10+SV.lv,P.pos);artInsp(1);
   pillar(P.pos.x,P.pos.z,1.3,12,0xffe080,1);save();}
 
 /* ---------------- dialog (NPC, bank, shops) ---------------- */
@@ -1662,10 +1692,11 @@ function renderDlg(){const d=curNpc.d;let h=`<h3>${d.ic} ${d.n.toUpperCase()}</h
     if(d.svc==='bank')h+=`<button class="pb gold wide" data-act="v:bank">💰 Open account bank</button>`;
     if(d.svc==='potions')h+=`<button class="pb gold wide" data-act="v:potions">🧪 Browse potions</button>`;
     if(d.svc==='books')h+=`<button class="pb gold wide" data-act="v:books">📘 Browse skill tomes</button>`;
+    if(d.svc==='arts')h+=`<button class="pb gold wide" data-act="v:lyra">🎭 Callings · shop · publish &amp; premiere</button>${SV.calls&&Object.keys(SV.calls).length?'<button class="pb wide" data-act="openarts">🎶 Practice my callings</button>':''}`;
     if(d.svc==='style')h+=`<button class="pb gold wide" data-act="style">👗 Open wardrobe · hair, colors &amp; accessories</button><div style="font-size:11px;opacity:.7;text-align:center">Styles you buy are unlocked for every hero on your account.${SV.freeRename?' Your first rename is free!':' Renaming costs ◆ 1,000.'}</div>`;
     if(d.svc==='guild')h+=`<button class="pb gold wide" data-act="v:guild">🎓 Learn a specialty</button><button class="pb gold wide" data-act="v:gh">🛡️ Guild hall${SV.guild?' · '+SV.guild.name:' · found a guild'}</button><button class="pb wide" data-act="v:hof">🏆 Hall of Fame</button>`;
     if(d.svc==='forge')h+=`<button class="pb gold wide" data-act="mk:forge">⚒️ Weapon, armor &amp; Ember upgrades</button><button class="pb gold wide" data-act="v:jup">💍 Upgrade rings &amp; necklaces</button>`;
-    if(d.quest){const L=SV.lv;const mine=Object.keys(SV.quests).filter(id=>QBY[id].g===d.id);const avail=QDEF.filter(q=>q.g===d.id&&L>=q.min&&L<=q.max&&!SV.quests[q.id]);
+    if(d.quest){const L=SV.lv;const mine=Object.keys(SV.quests).filter(id=>QBY[id].g===d.id);const avail=QDEF.filter(q=>q.g===d.id&&qOk(q,L)&&!SV.quests[q.id]);
       h+=`<div class="qh">QUESTS <span>${Object.keys(SV.quests).length}/${MAXQ} active</span></div>`;
       for(const id of mine){const q=QBY[id],s=SV.quests[id],r=qReward(q),done=s.p>=q.n;
         h+=`<div class="qr ${done?'qdone':''}"><b>${done?'✅':'⏳'} ${q.t}</b><small>${q.d.replace('{n}',q.n)}</small><div class="qp"><i style="width:${s.p/q.n*100}%"></i><span>${s.p} / ${q.n}</span></div>
@@ -1689,6 +1720,8 @@ function renderDlg(){const d=curNpc.d;let h=`<h3>${d.ic} ${d.n.toUpperCase()}</h
   else if(dlgView==='net')h+=renderNet();
   else if(dlgView==='rshop')h+=`<button class="pb" style="margin-bottom:8px" data-act="v:net">← Players</button>`+renderRShop();
   else if(dlgView==='guild')h+=back+renderGuild();
+  else if(dlgView==='lyra')h+=back+renderLyra();
+  else if(dlgView==='arts')h+=renderArtsMenu();
   else if(dlgView==='gh')h+=back+renderGuildHall();
   else if(dlgView==='hof')h+=back+renderFame();
   else if(dlgView==='jup')h+=back+`<div class="pts">◆ ${SV.gold.toLocaleString()} gold</div>`+renderJup();
@@ -2029,7 +2062,7 @@ function dropPeer(id){const p=NET.conns.get(id);NET.conns.delete(id);if(p&&p.inf
 function onJoin(info){if(!info||info.id===NET.id||NET.remotes.has(info.id))return;NET.remotes.set(info.id,makeRemote(info));chatSys('⚔️ '+info.name+' joined');SFX.chest();}
 function onLeave(id){const r=NET.remotes.get(id);if(!r)return;chatSys(r.name+' left');freeRemote(r);NET.remotes.delete(id);}
 function handleMsg(m){const r=NET.remotes.get(m.from);
-  if(m.t==='st'&&r){Object.assign(r,{tx:m.x,tz:m.z,tf:m.f,ty:m.y,an:m.an,hp:m.hp,sh:m.sh,seen:0});if(m.mt!==r.mt)setRemoteMount(r,m.mt);if(m.lv!==r.lv||m.cls!==r.cls){r.lv=m.lv;if(m.cls!==r.cls){r.cls=m.cls;rebuildRemote(r);}else drawRemoteLabel(r);}}
+  if(m.t==='st'&&r){Object.assign(r,{tx:m.x,tz:m.z,tf:m.f,ty:m.y,an:m.an,hp:m.hp,sh:m.sh,ar:m.ar||'',seen:0});if(m.mt!==r.mt)setRemoteMount(r,m.mt);if(m.lv!==r.lv||m.cls!==r.cls){r.lv=m.lv;if(m.cls!==r.cls){r.cls=m.cls;rebuildRemote(r);}else drawRemoteLabel(r);}}
   else if(m.t==='fx'&&r)remoteFx(r,m);
   else if(m.t==='meta'||m.t==='ginv'||m.t==='gres')guildMsg(m,r);
   else if(m.t==='en'||m.t==='eh'||m.t==='ek'||m.t==='ph')coopMsg(m);
@@ -2061,10 +2094,10 @@ function updRemotes(dt){for(const[id,r]of NET.remotes){r.seen+=dt;if(r.seen>12){
   h.capeP.rotation.x=.12+mv*.7;h.ring.visible=h.ring2.visible=!M;
   if(r.mount){const m=r.mount;m.root.position.set(r.x,r.mt==='griffin'?r.y+1.1:r.mt==='ember'?.95:0,r.z);m.root.rotation.y=r.f;if(m.legs.length){const sw=Math.sin(r.walk)*.8*mv;m.legs[0].rotation.x=sw;m.legs[3].rotation.x=sw;m.legs[1].rotation.x=-sw;m.legs[2].rotation.x=-sw;}
     if(m.wings){const fl=Math.sin(time*9);m.wings[0].rotation.z=(m.dragon?-.3:.2)+fl*.7;m.wings[1].rotation.z=(m.dragon?.3:-.2)-fl*.7;}}
-  r.lab.position.set(r.x,r.y+(M?M.seat+3.3:2.75),r.z);}}
+  remoteArt(r,dt);r.lab.position.set(r.x,r.y+(M?M.seat+3.3:2.75),r.z);}}
 function netUpdate(dt){if(NET.role==='off')return;updRemotes(dt);NET.sendT-=dt;if(NET.sendT>0||!SV)return;NET.sendT=.1;
   const moving=Math.hypot(inp.x,inp.z)>.1;const an=P.dead?4:P.atkT>0?(P.atkKind==='cast'?3:2):moving?1:0;
-  netSend({t:'st',x:+P.pos.x.toFixed(2),z:+P.pos.z.toFixed(2),f:+P.face.toFixed(2),y:+P.flyH.toFixed(2),an,mt:P.mounted?SV.mount:'',cls:SV.cls,lv:SV.lv,hp:+(P.hp/D2().maxHp).toFixed(2),sh:SV.shop?SV.shop.items.length:0});}
+  netSend({t:'st',x:+P.pos.x.toFixed(2),z:+P.pos.z.toFixed(2),f:+P.face.toFixed(2),y:+P.flyH.toFixed(2),an,mt:P.mounted?SV.mount:'',cls:SV.cls,lv:SV.lv,hp:+(P.hp/D2().maxHp).toFixed(2),sh:SV.shop?SV.shop.items.length:0,ar:artState()});}
 // --- chat ---
 function chatLine(t,sys){const el=document.createElement('div');el.className='cl'+(sys?' sys':'');el.textContent=t;const L=$('chatLog');L.appendChild(el);while(L.children.length>7)L.firstChild.remove();setTimeout(()=>el.classList.add('fade'),15000);}
 function chatSys(t){chatLine(t,true);}
@@ -2559,7 +2592,7 @@ function remoteLabel(r){return drawPlate(r.labC||(r.labC=document.createElement(
 let myPlate=null,myPlateC=null;
 function updNameplate(){if(!SV)return;if(!myPlate){myPlateC=document.createElement('canvas');myPlate=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(myPlateC),transparent:true,depthWrite:false,depthTest:false}));myPlate.scale.set(3.4,.85,1);myPlate.renderOrder=7;scene.add(myPlate);}
   drawPlate(myPlateC,{name:SV.name||CL[SV.cls].n,lv:SV.lv,cls:SV.cls,g:myGuildPub(),rk:rankOf(SV.fame||0),col:'#ffffff'});myPlate.material.map.needsUpdate=true;}
-function updWearFrame(dt){coopFlush(dt);if(myPlate){const on=SV&&hero&&playing&&!custMode&&SET.plate!==false&&!P.dead;myPlate.visible=!!on;if(on){const p=hero.root.position;myPlate.position.set(p.x,p.y+hero.body.position.y+(P.mounted?3.1:2.65),p.z);}}
+function updWearFrame(dt){coopFlush(dt);artFrame(dt);if(myPlate){const on=SV&&hero&&playing&&!custMode&&SET.plate!==false&&!P.dead;myPlate.visible=!!on;if(on){const p=hero.root.position;myPlate.position.set(p.x,p.y+hero.body.position.y+(P.mounted?3.1:2.65),p.z);{const k=clamp(CZ,.55,1);myPlate.scale.set(3.4*k,.85*k,1);}}}
   if(SV&&hero&&(custMode||(playing&&!paused))){animWear(hero,dt);emitWear(hero,custMode?custLook:SV.look,dt,!!custMode);}
   if(SV&&NET.role!=='off'){metaT-=dt;if(metaDirty&&metaT<=0){metaT=3;metaDirty=false;netSend({t:'meta',fame:SV.fame||0,g:myGuildPub()});}}}
 
@@ -2616,6 +2649,285 @@ function coopFlush(dt){if(NET.role==='off'||!SV)return;coopT-=dt;if(coopT>0)retu
   if(L.length)netSend({t:'en',l:L});}
 function coopMsg(m){if(m.t==='en')coopEn(m);else if(m.t==='eh')coopRecvHits(m);else if(m.t==='ek')coopKill(m);
   else if(m.t==='ph'){if(playing&&SV)hurtPlayer(m.a,{x:m.x,z:m.z},GH.get(m.nid)||OWN.get(m.nid)||null);}}
+
+/* ---------------- callings: non-combat paths ---------------- */
+const CALLS={music:{n:'Musician',ic:'🎵',d:'Perform songs on instruments you collect. Crowds tip well.'},
+  chef:{n:'Chef & Baker',ic:'🍳',d:'Cook and bake with pantry goods and gathered herbs. Dishes grant strong buffs.'},
+  writer:{n:'Writer',ic:'✍️',d:'Gather inspiration on your travels, then write poems, tales and novels.'},
+  film:{n:'Filmmaker',ic:'🎬',d:'Shoot beasts, friends and landmarks, then premiere your films in town.'},
+  dance:{n:'Dancer',ic:'💃',d:'Dance anywhere. Learn new moves as you level and dazzle the crowds.'}};
+const MAXCALL=2,CALLCAP=30;const callNeed=l=>50+l*35;
+const callLv=k=>SV&&SV.calls&&SV.calls[k]?SV.calls[k].lv:0;
+const SONGS=[{n:'Tavern Jig',lv:1,bpm:116,len:20},{n:'Shepherd’s Lament',lv:3,bpm:84,len:22,minor:1},{n:'March of Emberhold',lv:6,bpm:124,len:28},{n:'Whisperwood Waltz',lv:10,bpm:96,len:32,minor:1},
+  {n:'Dragonfire Ballad',lv:15,bpm:136,len:36},{n:'Frostpeak Hymn',lv:20,bpm:104,len:38,minor:1},{n:'Song of the Lands',lv:26,bpm:148,len:46}];
+const INSTR={lute:{n:'Lute',ic:'🪕',lv:1,p:0,m:1,wave:'triangle',dec:.45},flute:{n:'Flute',ic:'🪈',lv:4,p:1500,m:1.1,wave:'sine',dec:.55},drum:{n:'Hand Drum',ic:'🥁',lv:8,p:4000,m:1.15,drum:1},
+  harp:{n:'Harp',ic:'🎼',lv:12,p:9000,m:1.25,wave:'triangle',dec:1.2},violin:{n:'Violin',ic:'🎻',lv:18,p:18000,m:1.35,wave:'sawtooth',dec:.6},horn:{n:'Dragon Horn',ic:'📯',lv:24,p:35000,m:1.5,wave:'square',dec:.5}};
+const PANTRY={flour:['Flour','🌾',15],egg:['Eggs','🥚',12],milk:['Milk','🥛',12],sugar:['Sugar','🍬',18],butter:['Butter','🧈',20],berries:['Berries','🫐',16],fish:['River Fish','🐟',30],meat:['Game Meat','🥩',35],honey:['Honey','🍯',40],spice:['Spice Mix','🧂',45]};
+for(const k in PANTRY)MATS[k]={n:PANTRY[k][0],ic:PANTRY[k][1],cap:99,v:PANTRY[k][2],d:'Pantry good · sold by Maestra Lyra. Used in cooking.'};
+const RECIPES=[
+  {id:'herbbread',n:'Herb Bread',ic:'🍞',lv:1,m:{flour:2,sunpetal:1},buff:{regen:.008},dur:300,d:'Heal 0.8% HP per second',bake:1},
+  {id:'pancakes',n:'Pancake Stack',ic:'🥞',lv:3,m:{flour:1,egg:1,milk:1,sugar:1},buff:{pspd:.1},dur:300,d:'+10% speed'},
+  {id:'berrypie',n:'Berry Pie',ic:'🥧',lv:5,m:{flour:2,butter:1,berries:2,sugar:1},buff:{patk:.1},dur:300,d:'+10% attack',bake:1},
+  {id:'fishstew',n:'Riverside Stew',ic:'🍲',lv:8,m:{fish:1,silverleaf:1,milk:1},buff:{pdef:.15,regen:.004},dur:300,d:'+15% defense, slow healing'},
+  {id:'honeycake',n:'Honey Cake',ic:'🍰',lv:11,m:{flour:2,egg:2,honey:1,butter:1},buff:{rested:.12},dur:600,d:'+12% XP for 10 min',bake:1},
+  {id:'roast',n:'Hunter’s Roast',ic:'🍖',lv:14,m:{meat:2,spice:1,glowcap:1},buff:{patk:.15,pdef:.1},dur:300,d:'+15% attack, +10% defense'},
+  {id:'sweetroll',n:'Mossbloom Sweetroll',ic:'🧁',lv:17,m:{flour:1,sugar:2,butter:1,mossbloom:1},buff:{crit:.05,aspd:.1},dur:300,d:'+5% crit, +10% attack speed',bake:1},
+  {id:'chili',n:'Emberroot Chili',ic:'🌶️',lv:21,m:{meat:1,emberroot:1,spice:1},buff:{patk:.2,aspd:.1},dur:300,d:'+20% attack, +10% attack speed'},
+  {id:'sorbet',n:'Frostbloom Sorbet',ic:'🍧',lv:25,m:{milk:1,sugar:1,frostbloom:1,berries:1},buff:{pspd:.2,regen:.01},dur:300,d:'+20% speed, healing'},
+  {id:'feast',n:'Royal Feast',ic:'🎂',lv:28,m:{meat:1,fish:1,honey:1,flour:2,voidpetal:1},buff:{patk:.15,pdef:.15,pspd:.1,rested:.1},dur:600,d:'+15% atk & def, +10% speed & XP for 10 min',bake:1}];
+for(const r of RECIPES)ITEMS[r.id]={n:r.n,ic:r.ic,cap:20,v:Math.round(Object.entries(r.m).reduce((s,[k,n])=>s+(MATS[k]?MATS[k].v*n:0),0)*1.8),buff:r.buff,dur:r.dur,d:r.d+(r.dur>=600?'':' for 5 min')+'. Cooked by a Chef.'};
+const WORKS=[{id:'poem',n:'Poem',ic:'📜',lv:1,cost:1,rounds:4,v:90,xb:1},{id:'story',n:'Short Story',ic:'📖',lv:5,cost:2,rounds:6,v:260,xb:1.6},{id:'novel',n:'Novel',ic:'📕',lv:12,cost:4,rounds:8,v:750,xb:2.6},{id:'saga',n:'Epic Saga',ic:'📚',lv:20,cost:6,rounds:10,v:2000,xb:4}];
+for(const w of WORKS)ITEMS[w.id]={n:w.n,ic:w.ic,cap:30,v:w.v,buff:{rested:.03*w.xb},dur:300,d:`Written by a Writer. Read for +${Math.round(3*w.xb)}% XP (5 min), sell it, or publish it with Maestra Lyra.`};
+const RHYMES=[['light','night','bright','flight','sight','might'],['fire','higher','spire','choir','pyre','desire'],['stone','bone','throne','alone','known','grown'],['sea','free','tree','key','be','decree'],
+  ['day','way','stay','gray','sway','fray'],['sword','lord','ward','chord','hoard','sword'],['moon','soon','tune','rune','dune','noon'],['land','sand','hand','grand','stand','band'],['wing','king','ring','sing','spring','thing'],
+  ['heart','art','start','part','apart','chart'],['gold','bold','old','cold','told','hold'],['rain','plain','chain','again','reign','vain'],['dream','stream','gleam','beam','seam','team'],['fear','near','year','spear','clear','dear'],
+  ['flame','name','came','fame','game','claim'],['deep','keep','sleep','steep','sweep','leap']];
+const GENRES=[{id:'doc',n:'Nature Documentary',lv:1,shots:['beast','beast','beast'],v:300,xb:1.2},{id:'adv',n:'Adventure Film',lv:5,shots:['beast','landmark','dragon'],v:700,xb:1.8},
+  {id:'drama',n:'Town Drama',lv:10,shots:['npc','dragon','landmark'],v:1400,xb:2.6},{id:'epic',n:'Epic Saga Film',lv:18,shots:['elite','landmark','friend'],v:3000,xb:3.8}];
+for(const g of GENRES)ITEMS['reel_'+g.id]={n:g.n+' Reel',ic:'🎞️',cap:20,v:g.v,d:'A finished film. Premiere it with Maestra Lyra for gold, XP and fame — or sell it.'};
+const SUBJ={beast:'any beast',elite:'an elite beast or boss',landmark:'a landmark (fountain, waystone, camp)',dragon:'your dragon Ember',npc:'a townsperson',friend:'another player (or Ember)'};
+const MOVES=[['sway','Sway',1],['clap','Clap Along',2],['twirl','Twirl',4],['robot','Robot',6],['hop','Hop Step',8],['wave','Arm Wave',11],['moonwalk','Moonwalk',15],['spinout','Spin-Out',20],['dragon','Dragon Dance',26]];
+function callUnlockTxt(k,lv){const a=[];
+  if(k==='music'){SONGS.filter(s=>s.lv===lv).forEach(s=>a.push('NEW SONG: '+s.n));for(const i in INSTR)if(INSTR[i].lv===lv&&INSTR[i].p)a.push(INSTR[i].n+' AVAILABLE');}
+  if(k==='chef')RECIPES.filter(r=>r.lv===lv).forEach(r=>a.push('NEW RECIPE: '+r.n));if(k==='writer')WORKS.filter(w=>w.lv===lv).forEach(w=>a.push('NEW FORM: '+w.n));
+  if(k==='film')GENRES.filter(g=>g.lv===lv).forEach(g=>a.push('NEW GENRE: '+g.n));if(k==='dance')MOVES.filter(m=>m[2]===lv).forEach(m=>a.push('NEW MOVE: '+m[1]));
+  return(a.join(' · ')||'KEEP PRACTICING').toUpperCase();}
+function callXp(k,n){const c=SV.calls&&SV.calls[k];if(!c||c.lv>=CALLCAP)return;c.xp+=n;let up=false;while(c.lv<CALLCAP&&c.xp>=callNeed(c.lv)){c.xp-=callNeed(c.lv);c.lv++;up=true;}
+  if(up){setTimeout(()=>{banner(CALLS[k].ic+' '+CALLS[k].n.toUpperCase()+' · LV '+c.lv+'<small>'+callUnlockTxt(k,c.lv)+'</small>',3.2);SFX.level();pillar(P.pos.x,P.pos.z,1.3,12,0xff9ad0,1);},900);}}
+function audience(){let n=0;for(const N of NPCS){const p=N.h&&N.h.root.position;if(p&&Math.hypot(p.x-P.pos.x,p.z-P.pos.z)<14)n++;}
+  if(NET.role!=='off')for(const r of NET.remotes.values())if(Math.hypot(r.x-P.pos.x,r.z-P.pos.z)<16)n+=2;return n;}
+function artReward(k,q,base=1){const c=SV.calls[k],lvB=1+.02*(c?c.lv:1);
+  const xp=Math.max(1,Math.round(xpNeed(SV.lv)*(.02+.065*q)*base*lvB));const cx=Math.round((12+30*q)*Math.min(base,2.5));
+  callXp(k,cx);gainXp(xp);showNum(P.pos,'+'+xp+' XP','xp',2.6);setTimeout(()=>showNum(P.pos,'+'+cx+' '+CALLS[k].ic+' '+CALLS[k].n,'fame',3.1),300);
+  qEvent('artwork');if(q>=.95)gainFame(3,P.pos);save();return xp;}
+function artInsp(n){if(!SV||!callLv('writer'))return;const b=SV.insp||0;SV.insp=Math.min(10,b+n);if(SV.insp>b){toast('💡 Inspiration '+SV.insp+'/10');qEvent('insp');}}
+const artAllowed=()=>{if(P.dead||P.mounted||P.flyH>0.5){toast(P.mounted?'Dismount first':'Not right now');return false;}if(!inSafe(P.pos)&&nearestEnemy(P.pos,11)){toast('Too dangerous — clear the area or head to a safe zone');return false;}return true;};
+
+/* ----- props & poses ----- */
+function artProp(h,kind){if(!h)return;h.props=h.props||{};for(const k in h.props)h.props[k].visible=k===kind;if(!kind||h.props[kind])return;
+  const g=new THREE.Group();const M=c=>new THREE.MeshLambertMaterial({color:c});const add=(geo,mat,x,y,z,sx,sy,sz,par=g)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.scale.set(sx,sy,sz);par.add(m);return m;};
+  const wood=M(0x8a5a2a),dark=M(0x3a2414),gold=M(0xe8c56a),metal=M(0x9aa0aa);
+  if(kind==='lute'){add(GEO.sph,wood,0,0,0,.24,.3,.09).rotation.z=.9;add(GEO.box,dark,.28,.24,0,.07,.5,.04).rotation.z=.9;g.position.set(-.05,1.05,.3);}
+  else if(kind==='flute'){const c=add(GEO.cyl||GEO.box,M(0xd8c8a0),0,0,0,.05,.6,.05);c.rotation.z=Math.PI/2;g.position.set(.12,1.48,.38);}
+  else if(kind==='drum'){add(GEO.cyl||GEO.box,M(0xb04a2a),0,0,0,.28,.3,.28);add(GEO.cyl||GEO.box,M(0xf0e0c0),0,.16,0,.27,.02,.27);g.position.set(0,.95,.4);}
+  else if(kind==='harp'){add(GEO.box,gold,0,0,0,.06,.8,.06);add(GEO.box,gold,.2,.35,0,.4,.06,.06).rotation.z=-.4;add(GEO.box,gold,.32,0,0,.05,.7,.05).rotation.z=.25;for(let i=0;i<4;i++)add(GEO.box,M(0xffffff),.08+i*.06,0,0,.01,.6-i*.08,.01);g.position.set(-.25,1.1,.35);}
+  else if(kind==='violin'){add(GEO.sph,M(0x9a3a1a),0,0,0,.14,.2,.06).rotation.z=-.9;add(GEO.box,dark,-.2,.15,0,.04,.3,.03).rotation.z=-.9;g.position.set(-.18,1.42,.28);const bow=add(GEO.box,M(0xe8d8b0),0,-.55,.2,.02,.02,.7,new THREE.Group());h.armR.add(bow.parent);g.userData.bow=bow.parent;}
+  else if(kind==='horn'){const c=new THREE.Mesh(new THREE.ConeGeometry(.16,.7,12,1,true),gold);c.rotation.x=-Math.PI/2-.3;g.add(c);g.position.set(0,1.62,.55);}
+  else if(kind==='chef'){add(GEO.cyl||GEO.box,M(0x2a2a2a),0,0,0,.3,.04,.3);add(GEO.box,dark,0,0,-.38,.06,.04,.3);g.position.set(0,1.02,.55);}
+  else if(kind==='write'){add(GEO.box,M(0x6a2a1a),0,0,0,.36,.04,.26);add(GEO.box,M(0xf4ecd8),0,.03,0,.32,.02,.22);const q=new THREE.Mesh(new THREE.ConeGeometry(.03,.3,5),M(0xffffff));q.position.set(.12,.12,.04);q.rotation.z=-.5;g.add(q);g.position.set(0,1.05,.42);g.rotation.x=-.5;}
+  else if(kind==='film'){add(GEO.box,M(0x1a1a1a),0,0,0,.3,.22,.2);add(GEO.cyl||GEO.box,metal,0,0,.16,.08,.14,.08).rotation.x=Math.PI/2;add(GEO.sph,M(0x3a3a3a),-.06,.16,0,.08,.08,.08);add(GEO.sph,M(0x3a3a3a),.08,.16,0,.08,.08,.08);g.position.set(0,1.5,.42);}
+  h.body.add(g);h.props[kind]=g;}
+function artPose(h,ar,t){if(!h||!ar)return;const[a,b]=ar.split(':');const L=h.armL,R=h.armR,s=Math.sin,legs=h.legs;
+  if(a==='m'){if(b==='lute'){L.rotation.set(-1.2,0,-.5);R.rotation.set(-.9+s(t*14)*.18,0,.4);}else if(b==='flute'||b==='horn'){L.rotation.set(-1.9,0,-.55);R.rotation.set(-1.9,0,.45);h.body.rotation.x=s(t*2)*.05;}
+    else if(b==='drum'){L.rotation.set(-1.0+Math.max(0,s(t*12))*.5,0,-.2);R.rotation.set(-1.0+Math.max(0,-s(t*12))*.5,0,.2);}else if(b==='harp'){L.rotation.set(-1.2,0,-.2+s(t*6)*.12);R.rotation.set(-1.1,0,.1-s(t*6)*.15);}
+    else if(b==='violin'){L.rotation.set(-1.8,0,-.6);R.rotation.set(-1.4,0,.2+s(t*5)*.35);}h.body.position.y=Math.abs(s(t*4))*.04;}
+  else if(a==='c'){L.rotation.set(-.9,0,-.3);R.rotation.set(-1.2+s(t*9)*.25,0,.15);}
+  else if(a==='w'){L.rotation.set(-1.1,0,-.2);R.rotation.set(-1.15+s(t*16)*.06,0,.05+s(t*3)*.1);h.body.rotation.x=.12;}
+  else if(a==='f'){L.rotation.set(-1.9,0,-.5);R.rotation.set(-1.9,0,.5);}
+  else if(a==='d')danceAnim(h,b,t);}
+function danceAnim(h,mv,t){const L=h.armL,R=h.armR,s=Math.sin,c=Math.cos,B=h.body,lg=h.legs;B.rotation.set(0,0,0);B.position.y=0;
+  switch(mv){case'sway':B.rotation.z=s(t*3)*.16;L.rotation.set(-.3,0,-.5+s(t*3)*.2);R.rotation.set(-.3,0,.5+s(t*3)*.2);B.position.y=Math.abs(s(t*3))*.05;break;
+    case'clap':{const k=Math.abs(s(t*5));L.rotation.set(-1.5,0,-.15-k*.45);R.rotation.set(-1.5,0,.15+k*.45);B.position.y=Math.abs(s(t*5))*.06;break;}
+    case'twirl':B.rotation.y=t*6;L.rotation.set(-2.9,0,-.2);R.rotation.set(-2.9,0,.2);break;
+    case'robot':{const q=Math.floor(t*3)%4;B.rotation.y=[0,.4,0,-.4][q];L.rotation.set([-1.5,0,-1.5,-.2][q],0,-.1);R.rotation.set([0,-1.5,-.2,-1.5][q],0,.1);break;}
+    case'hop':B.position.y=Math.abs(s(t*6))*.35;lg[0].rotation.x=s(t*6)*.6;lg[1].rotation.x=-s(t*6)*.6;L.rotation.set(-.4,0,-.9);R.rotation.set(-.4,0,.9);break;
+    case'wave':L.rotation.set(0,0,-1.4+s(t*5)*.4);R.rotation.set(0,0,1.4+s(t*5+1.2)*.4);B.rotation.z=s(t*5+.6)*.1;break;
+    case'moonwalk':{const k=s(t*4);lg[0].rotation.x=k*.5;lg[1].rotation.x=-k*.5;B.rotation.x=-.12;L.rotation.set(.3,0,-.2);R.rotation.set(.3,0,.2);B.position.y=Math.abs(k)*.05;break;}
+    case'spinout':B.rotation.y=t*11;L.rotation.set(0,0,-1.55);R.rotation.set(0,0,1.55);B.position.y=.05+Math.abs(s(t*11))*.05;break;
+    case'dragon':{const f=s(t*5);L.rotation.set(-.2,0,-1.2-f*.6);R.rotation.set(-.2,0,1.2+f*.6);B.position.y=.1+Math.abs(c(t*5))*.12;B.rotation.x=.15+f*.05;lg[0].rotation.x=f*.3;lg[1].rotation.x=-f*.3;break;}}}
+let noteTex=null;function noteFx(x,y,z,col){if(!noteTex){const cv=document.createElement('canvas');cv.width=cv.height=64;const g=cv.getContext('2d');g.font='900 52px serif';g.textAlign='center';g.textBaseline='middle';g.fillStyle='#fff';g.fillText(['♪','♫'][Math.random()*2|0],32,34);noteTex=new THREE.CanvasTexture(cv);}
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:noteTex,color:col,transparent:true,depthWrite:false}));s.scale.setScalar(.45);s.position.set(x+rand(-.4,.4),y,z+rand(-.4,.4));const vx=rand(-.5,.5);
+  addFx(s,1.4,(m,p)=>{m.position.y+=.025;m.position.x+=vx*.01;m.material.opacity=1-p;m.material.rotation=Math.sin(p*9)*.4;});}
+
+/* ----- shared activity state ----- */
+let ART=null,artLastZone=-1,artZoneT=0,artPassT=240,artFreeT=0;
+function artOverlay(html){const el=$('arts');el.classList.remove('hidden');$('artsBody').innerHTML=html;}
+function artClose(){$('arts').classList.add('hidden');$('artsBody').innerHTML='';$('filmHud').classList.add('hidden');if(ART&&ART.k==='film'){}ART=null;artProp(hero,null);}
+function artCancel(msg){if(!ART)return;if(ART.k==='music'&&ART.song)toast('Performance stopped');if(msg)toast(msg);artClose();}
+const artState=()=>!ART?'':ART.k==='music'?'m:'+ART.inst:ART.k==='chef'?'c':ART.k==='writer'?'w':ART.k==='film'?'f':ART.k==='dance'?'d:'+(ART.mv||'sway'):'';
+function artFrame(dt){if(!SV||!playing)return;
+  if(callLv('writer')){const zi=inTown(P.pos)?-1:zoneIdx(P.pos.x,P.pos.z);artZoneT-=dt;if(zi!==artLastZone){if(zi>=0&&artZoneT<=0&&artLastZone!==-2){artInsp(1);artZoneT=45;}artLastZone=zi;}artPassT-=dt;if(artPassT<=0){artPassT=240;artInsp(1);}}
+  if(!ART)return;{const now=performance.now();dt=Math.min(.3,(now-(ART.rl||now))/1000);ART.rl=now;}ART.t+=dt;
+  const mov=Math.hypot(inp.x,inp.z)>.15;
+  if(ART.k!=='film'&&(mov||P.dead||P.hp<ART.hp0-1)){artCancel(mov?null:'Interrupted!');return;}
+  if(ART.k!=='film'){artPose(hero,artState(),ART.t);if(!paused){const a=ART.t*.25,d=ART.k==='dance'?6:5;camera.position.set(P.pos.x+Math.sin(a)*d,2.6,P.pos.z+Math.cos(a)*d);camera.lookAt(P.pos.x,1.1,P.pos.z);}}
+  if(ART.k==='music')musicFrame(dt);else if(ART.k==='chef')cookFrame(dt);else if(ART.k==='writer')writeFrame(dt);else if(ART.k==='dance')danceFrame(dt);else if(ART.k==='film')filmFrame(dt);}
+function remoteArt(r,dt){if(!r.ar)return artProp(r.h,null);const k=r.ar.split(':');artProp(r.h,k[0]==='m'?k[1]:k[0]==='c'?'chef':k[0]==='w'?'write':k[0]==='f'?'film':null);r.art_t=(r.art_t||0)+dt;artPose(r.h,r.ar,r.art_t);
+  if(k[0]==='m'&&Math.random()<dt*3)noteFx(r.x,2.3+r.y,r.z,[0xffe080,0x9ae0ff,0xff9ad0][Math.random()*3|0]);if(k[0]==='c'&&Math.random()<dt*6)part(r.x+Math.sin(r.f)*.6,1.3,r.z+Math.cos(r.f)*.6,0,1,0,0xf0f0f0,.3,.8,{normal:true,op:.4});}
+
+/* ----- MUSIC: rhythm game ----- */
+const NOTE_FREQ=(i,minor)=>{const sc=minor?[0,3,5,7,10]:[0,2,4,7,9];const o=Math.floor(i/5),k=((i%5)+5)%5;return 220*Math.pow(2,(sc[k]+12*o)/12);};
+function playNote(inst,i,minor,vol=.18){const I=INSTR[inst],f=NOTE_FREQ(i,minor);if(I.drum){nz(.18,.3,'lowpass',[300,700,1600][((i%3)+3)%3],80);tone([90,140,220][((i%3)+3)%3],.2,'sine',.25,40);return;}
+  tone(f,I.dec,I.wave,inst==='violin'||inst==='horn'?vol*.55:vol);if(inst==='harp')tone(f*2,I.dec*.8,'sine',vol*.3,null,.01);if(inst==='lute')tone(f*2,.12,'triangle',vol*.25);}
+function startPerform(si,inst){if(!artAllowed())return;const S=SONGS[si];closeDlg();const beat=60/S.bpm;let t=2.2,lane=1,mel=5;const notes=[];
+  for(let i=0;i<S.len;i++){lane=clamp(lane+((Math.random()*3|0)-1),0,2);mel=clamp(mel+((Math.random()*5|0)-2)+(lane-1),2,11);notes.push({t,lane,mel,st:0});
+    const r=Math.random();t+=beat*(S.lv>=10&&r<.25?.5:r<.12?2:1);}
+  ART={k:'music',t:0,t0:performance.now(),song:S,si,inst,notes,clock:0,beat,end:t+1.2,perf:0,good:0,miss:0,hp0:P.hp,combo:0,nextBeat:0};artProp(hero,inst);
+  artOverlay(`<div class="arth">${INSTR[inst].ic} ${S.n} <span id="mScore">0</span></div><div id="mLanes">${[0,1,2].map(i=>`<div class="lane" data-l="${i}"></div>`).join('')}<div class="hitline"></div></div>
+    <div class="mbtns">${[0,1,2].map(i=>`<button class="mb" data-mb="${i}">${['♩','♪','♫'][i]}</button>`).join('')}</div><div class="arttip">Tap when notes reach the line · keys A S D</div>`);
+  document.querySelectorAll('#mLanes .lane').forEach((el,i)=>{ART.notes.filter(n=>n.lane===i).forEach(n=>{const d=document.createElement('div');d.className='note';el.appendChild(d);n.el=d;});});}
+function musicHit(l){const A=ART;if(!A||A.k!=='music')return;let best=null,bd=.2;for(const n of A.notes){if(n.st||n.lane!==l)continue;const d=Math.abs(n.t-A.clock);if(d<bd){bd=d;best=n;}}
+  const btn=document.querySelector(`[data-mb="${l}"]`);if(btn){btn.classList.add('hit');setTimeout(()=>btn.classList.remove('hit'),90);}
+  if(!best){A.combo=0;return;}best.st=bd<.085?2:1;if(best.st===2)A.perf++;else A.good++;A.combo++;playNote(A.inst,best.mel,A.song.minor);best.el.classList.add(best.st===2?'perf':'good');
+  noteFx(P.pos.x,2.4,P.pos.z,best.st===2?0xffe080:0x9ae0ff);const sc=$('mScore');if(sc)sc.textContent=(best.st===2?'PERFECT ':'GOOD ')+(A.combo>2?A.combo+'×':'');}
+function musicFrame(dt){const A=ART;A.clock=(performance.now()-A.t0)/1000;const H=($('mLanes')||{}).clientHeight||180,hy=H-26;
+  if(A.clock>=A.nextBeat&&A.clock<A.end-1){A.nextBeat+=A.beat*2;const root=A.song.minor?0:0;tone(NOTE_FREQ(root+(Math.floor(A.clock/A.beat/4)%2?3:0),A.song.minor)/2,A.beat*1.6,'triangle',.05);}
+  for(const n of A.notes){if(!n.el)continue;const dtn=n.t-A.clock;if(n.st){n.el.style.opacity=Math.max(0,+(n.el.style.opacity||1)-dt*4);continue;}
+    if(dtn<-.2){n.st=-1;A.miss++;A.combo=0;n.el.classList.add('miss');continue;}n.el.style.transform=`translateY(${hy-dtn*160}px)`;n.el.style.opacity=dtn>2?0:1;}
+  if(A.clock>=A.end)finishPerform();}
+function finishPerform(){const A=ART,N=A.notes.length,q=clamp((A.perf+A.good*.6)/N,0,1),aud=audience(),I=INSTR[A.inst];artClose();
+  const tips=Math.round((8+SV.lv*3)*q*(1+aud*.35)*(1+A.si*.15));SV.gold+=tips;
+  const grade=q>=.95?'S':q>=.85?'A':q>=.7?'B':q>=.5?'C':'D';banner('🎵 '+A.song.n.toUpperCase()+' · '+grade+'<small>'+A.perf+' PERFECT · '+A.good+' GOOD · '+A.miss+' MISS'+(aud?' · '+aud+' LISTENERS':'')+' · +◆ '+tips+' TIPS</small>',3.2);
+  artReward('music',q,I.m*(1+A.si*.12));qEvent('perform');if(q>=.9)qEvent('mperfect');if(OUTPOSTS.some(o=>Math.hypot(o.x-P.pos.x,o.z-P.pos.z)<o.r+2))qEvent('perfout');if(aud>=4)qEvent('crowd');
+  if(q>=.6)for(let i=0;i<14;i++)setTimeout(()=>noteFx(P.pos.x,2.2,P.pos.z,0xffe080),i*60);SFX.chest();}
+
+/* ----- CHEF: timing minigame ----- */
+function canCook(r){return Object.entries(r.m).every(([k,n])=>invN(k)>=n);}
+function startCook(i){const r=RECIPES[i];if(!canCook(r)){toast('Missing ingredients');return;}if(!artAllowed())return;closeDlg();for(const k in r.m)invAdd(k,-r.m[k]);
+  const steps=r.bake?['Knead','Bake','Decorate']:['Chop','Cook','Plate'];const sp=1.1+r.lv*.035;
+  ART={k:'chef',t:0,r,steps,step:0,scores:[],pos:0,dir:1,spd:sp,zone:.32-r.lv*.006,gold:.09,center:rand(.3,.7),hp0:P.hp};artProp(hero,'chef');renderCook();}
+function renderCook(){const A=ART;artOverlay(`<div class="arth">${A.r.ic} ${A.r.n} <span>${A.step+1}/3</span></div><div class="cstep">${A.steps[A.step]}!</div>
+  <div class="cbar"><div class="cz" style="left:${(A.center-A.zone/2)*100}%;width:${A.zone*100}%"></div><div class="cg" style="left:${(A.center-A.gold/2)*100}%;width:${A.gold*100}%"></div><div class="cn" id="cNeedle"></div></div>
+  <div class="cres">${A.scores.map(s=>s>=1?'🌟':s>=.7?'✅':'🔥').join(' ')}</div><button class="pb gold wide big" data-cook="1">${A.steps[A.step].toUpperCase()}</button><div class="arttip">Tap when the marker is in the green — gold is perfect · Space</div>`);}
+function cookFrame(dt){const A=ART;if(A.wait>0){A.wait-=dt;if(A.wait<=0){if(A.step>=3)finishCook();else renderCook();}return;}A.pos+=A.dir*A.spd*dt;if(A.pos>1){A.pos=1;A.dir=-1;}if(A.pos<0){A.pos=0;A.dir=1;}
+  const n=$('cNeedle');if(n)n.style.left=(A.pos*100)+'%';if(Math.random()<dt*8)part(P.pos.x+Math.sin(P.face)*.55,1.2,P.pos.z+Math.cos(P.face)*.55,rand(-.2,.2),rand(.6,1.2),rand(-.2,.2),0xf4f4f4,.3,.9,{normal:true,op:.45});
+  if(Math.random()<dt*6)part(P.pos.x+Math.sin(P.face)*.55,1.0,P.pos.z+Math.cos(P.face)*.55,rand(-.3,.3),rand(.3,.8),rand(-.3,.3),0xff8a30,.22,.4);}
+function cookTap(){const A=ART;if(!A||A.k!=='chef'||A.wait>0)return;const d=Math.abs(A.pos-A.center);const s=d<A.gold/2?1:d<A.zone/2?.7:.25;A.scores.push(s);
+  nz(.25,.18,'highpass',2500,6000);if(s>=1){sparks(P.pos.x,1.2,P.pos.z,10,0xffe080,6);tone(1320,.15,'triangle',.1);}else if(s<.5){burst(P.pos.x,1.1,P.pos.z,10,0x3a3a3a,3,.5,.6,{normal:true,op:.6});}
+  A.step++;A.center=rand(.25,.75);A.spd*=1.12;A.wait=.55;const r=document.querySelector('.cres');if(r)r.innerHTML=A.scores.map(s=>s>=1?'🌟':s>=.7?'✅':'🔥').join(' ');}
+function finishCook(){const A=ART,q=A.scores.reduce((a,b)=>a+b,0)/3;artClose();const n=q>=.95?2:1;const got=invAdd(A.r.id,n);
+  banner(A.r.ic+' '+A.r.n.toUpperCase()+(q>=.95?' · PERFECT':q>=.7?' · DELICIOUS':' · A LITTLE BURNT')+'<small>+'+got+' '+A.r.n.toUpperCase()+(got<n?' (BAG FULL)':'')+' · '+A.r.d.toUpperCase()+'</small>',3);
+  artReward('chef',q,1+A.r.lv*.05);qEvent('cook');if(q>=.95)qEvent('cperfect');SFX.chest();}
+
+/* ----- WRITER: rhyme game ----- */
+function startWrite(i){const W=WORKS[i];if((SV.insp||0)<W.cost){toast('Need '+W.cost+' inspiration — explore new places, finish quests');return;}if(!artAllowed())return;closeDlg();SV.insp-=W.cost;
+  ART={k:'writer',t:0,W,round:0,ok:0,hp0:P.hp,lines:[]};artProp(hero,'write');nextRhyme();}
+function nextRhyme(){const A=ART;if(A.round>=A.W.rounds){finishWrite();return;}const fi=Math.random()*RHYMES.length|0,F=RHYMES[fi];const ws=[...new Set(F)];const tgt=ws[Math.random()*ws.length|0];
+  const right=ws.filter(w=>w!==tgt)[Math.random()*(ws.length-1)|0];const opts=[right];while(opts.length<4){const G=RHYMES[Math.random()*RHYMES.length|0];if(G===F)continue;const w=G[Math.random()*G.length|0];if(!opts.includes(w))opts.push(w);}
+  opts.sort(()=>Math.random()-.5);A.cur={tgt,right,opts,t:Math.max(2.6,4.6-callLv('writer')*.04)};A.left=A.cur.t;
+  artOverlay(`<div class="arth">${A.W.ic} ${A.W.n} <span>line ${A.round+1}/${A.W.rounds}</span></div><div class="wlines">${A.lines.slice(-3).map(l=>`<div>${l}</div>`).join('')}</div>
+    <div class="wprompt">Find a rhyme for <b>“${tgt}”</b></div><div class="wtimer"><i id="wT"></i></div><div class="wopts">${opts.map(o=>`<button class="pb" data-rh="${o}">${o}</button>`).join('')}</div>`);}
+const LINE_T=['Beneath the {a}, I sought the {b}','The wanderer spoke of {a} and {b}','O dragon born of {a} and {b}','We rode until the {a} met the {b}','My heart recalls the {a}, the {b}','In Emberhold they sing of {a} and {b}'];
+function rhymePick(w){const A=ART;if(!A||A.k!=='writer'||!A.cur)return;const ok=w===A.cur.right;if(ok){A.ok+=A.left>A.cur.t*.5?1:.8;tone(880,.12,'triangle',.1);tone(1320,.18,'triangle',.08,null,.08);}else{tone(180,.2,'sawtooth',.06);}
+  A.lines.push(ok?LINE_T[Math.random()*LINE_T.length|0].replace('{a}',A.cur.tgt).replace('{b}',A.cur.right)+(Math.random()<.5?',':'…'):'<i style="opacity:.5">(a crossed-out line)</i>');A.round++;A.cur=null;setTimeout(nextRhyme,ok?250:450);}
+function writeFrame(dt){const A=ART;if(Math.random()<dt*2)part(P.pos.x+Math.sin(P.face)*.5,1.3,P.pos.z+Math.cos(P.face)*.5,0,.6,0,0xfff0b0,.18,.6);if(!A.cur)return;A.left-=dt;const el=$('wT');if(el)el.style.width=Math.max(0,A.left/A.cur.t*100)+'%';if(A.left<=0)rhymePick('');}
+function finishWrite(){const A=ART,q=clamp(A.ok/A.W.rounds,0,1);artClose();invAdd(A.W.id,1);banner(A.W.ic+' '+A.W.n.toUpperCase()+' FINISHED'+(q>=.9?' · MASTERWORK':'')+'<small>'+(q>=.9?'CRITICS WILL WEEP · ':'')+'ADDED TO YOUR BAG — SELL, READ OR PUBLISH IT</small>',3.2);
+  if(q>=.9)SV.gold+=Math.round(A.W.v*.3);artReward('writer',q,A.W.xb);qEvent('write');if(A.W.id==='novel'||A.W.id==='saga')qEvent('novel');SFX.chest();}
+
+/* ----- FILM: shot list ----- */
+function filmSubjects(type){const L=[];if(type==='beast'||type==='elite')for(const e of enemies){if(e.dead)continue;if(type==='elite'&&!(e.d.elite||e.boss))continue;L.push({p:e.pos,y:1.2*e.d.scale,id:'e'+(e.nid||e.type)});}
+  if(type==='landmark'){L.push({p:{x:0,z:0},y:2,id:'fountain'});for(const w of WAYS)L.push({p:w,y:1.5,id:'w'+w.x});for(const o of OUTPOSTS)L.push({p:o,y:1.5,id:'o'+o.x});}
+  if(type==='npc')for(const N of NPCS)L.push({p:N.h.root.position,y:1.4,id:'n'+N.d.id});
+  if(type==='dragon'||type==='friend'){if(drag&&drag.root.visible)L.push({p:drag.root.position,y:.8,id:'ember'});}
+  if(type==='friend'&&NET.role!=='off')for(const r of NET.remotes.values())L.push({p:{x:r.x,z:r.z},y:1.2+r.y,id:'r'+r.id});return L;}
+function startFilm(gi){if(!SV.camera){toast('Buy a camera from Maestra Lyra');return;}if(P.dead)return;closeDlg();const G=GENRES[gi];
+  ART={k:'film',t:0,G,gi,slots:G.shots.map(s=>({s,done:false,q:0})),hp0:P.hp,used:new Set()};$('filmHud').classList.remove('hidden');renderFilm();toast('🎬 Frame your subjects and tap the shutter');}
+function renderFilm(){const A=ART;$('filmList').innerHTML=`<b>${A.G.n}</b>`+A.slots.map(s=>`<div class="${s.done?'ok':''}">${s.done?'✅':'⬜'} ${SUBJ[s.s]}${s.done?' '+'★'.repeat(Math.max(1,Math.round(s.q*3))):''}</div>`).join('');}
+function filmShot(){const A=ART;if(!A||A.k!=='film')return;screenFlash('#ffffff',.6,.25);nz(.08,.4,'highpass',3000,8000);tone(1800,.05,'square',.05);
+  let got=null;for(const sl of A.slots){if(sl.done)continue;let best=null,bq=0;for(const S of filmSubjects(sl.s)){if(A.used.has(S.id))continue;V3.set(S.p.x,S.y,S.p.z).project(camera);if(V3.z>1||Math.abs(V3.x)>.6||Math.abs(V3.y)>.6)continue;
+      const dist=Math.hypot(S.p.x-camera.position.x,S.p.z-camera.position.z);if(dist>34)continue;const q=clamp(1-(Math.abs(V3.x)+Math.abs(V3.y))/1.2,0,1)*.7+(dist>5&&dist<20?.3:.12);if(q>bq){bq=q;best=S;}}
+    if(best){sl.done=true;sl.q=bq;A.used.add(best.id);got=sl;break;}}
+  if(got){toast('🎬 Got it — '+SUBJ[got.s]+' '+'★'.repeat(Math.max(1,Math.round(got.q*3))));tone(1046,.15,'triangle',.1);callXp('film',2);qEvent('shot');}else toast('Nothing on the shot list in frame — get closer and center it');
+  renderFilm();if(A.slots.every(s=>s.done))setTimeout(finishFilm,500);}
+function filmFrame(dt){if(P.dead)artCancel('Filming interrupted');}
+function finishFilm(){const A=ART;if(!A)return;const q=A.slots.reduce((s,x)=>s+x.q,0)/A.slots.length;artClose();invAdd('reel_'+A.G.id,1);
+  banner('🎬 THAT’S A WRAP!<small>'+A.G.n.toUpperCase()+' REEL ADDED · PREMIERE IT WITH MAESTRA LYRA</small>',3);artReward('film',q,A.G.xb);qEvent('film');SFX.chest();}
+
+/* ----- DANCE: freestyle + routines ----- */
+const movesOwned=()=>MOVES.filter(m=>callLv('dance')>=m[2]);
+function startFree(mv){if(!artAllowed())return;closeDlg();ART={k:'dance',t:0,mv,free:true,hp0:P.hp,tick:0};artProp(hero,null);artOverlay(`<div class="arth">💃 ${MOVES.find(m=>m[0]===mv)[1]}</div><div class="chips" style="justify-content:center">${movesOwned().map(m=>`<button class="chip ${m[0]===mv?'sel':''}" data-dm="${m[0]}">${m[1]}</button>`).join('')}</div><div class="arttip">Move the joystick to stop dancing</div>`);}
+const ARR=['⬅️','⬆️','⬇️','➡️'];
+function startRoutine(){if(!artAllowed())return;closeDlg();const lv=callLv('dance');ART={k:'dance',t:0,t0:performance.now(),mv:'sway',routine:true,round:0,rounds:6,ok:0,onb:0,taps:0,hp0:P.hp,bpm:100+lv*1.2,len:Math.min(6,3+Math.floor(lv/6))};nextRoutine();}
+function nextRoutine(){const A=ART;if(A.round>=A.rounds){finishRoutine();return;}A.seq=Array.from({length:A.len},()=>Math.random()*4|0);A.idx=0;A.err=false;
+  artOverlay(`<div class="arth">💃 Routine <span>${A.round+1}/${A.rounds}</span></div><div class="dseq">${A.seq.map((s,i)=>`<span id="ds${i}">${ARR[s]}</span>`).join('')}</div><div class="dbeat" id="dBeat"></div>
+    <div class="dbtns">${[0,1,2,3].map(i=>`<button class="mb" data-da="${i}">${ARR[i]}</button>`).join('')}</div><div class="arttip">Tap the arrows in order, on the beat · arrow keys</div>`);}
+function danceTap(i){const A=ART;if(!A||!A.routine||A.wait>0)return;const beat=60/A.bpm,ph=((performance.now()-A.t0)/1000%beat)/beat,on=ph<.22||ph>.78;A.taps++;if(on)A.onb++;
+  const el=$('ds'+A.idx);if(i===A.seq[A.idx]){if(el)el.className=on?'ok':'meh';A.idx++;tone(on?660+A.idx*110:440,.1,'triangle',.08);if(A.idx>=A.seq.length){A.ok++;A.round++;const ms=movesOwned();A.mv=ms[Math.random()*ms.length|0][0];A.wait=1.4;sparks(P.pos.x,1.2,P.pos.z,12,0xff9ad0,7);noteFx(P.pos.x,2.3,P.pos.z,0xff9ad0);}}
+  else{if(el)el.className='bad';tone(150,.2,'sawtooth',.06);A.round++;A.wait=.8;}}
+function danceFrame(dt){const A=ART;if(A.free){A.tick+=dt;if(A.tick>=8){A.tick=0;callXp('dance',2);const au=audience();if(au){const g=Math.round((2+SV.lv*.6)*au);SV.gold+=g;showNum(P.pos,'+'+g+' ◆','gold',2.8);}}if(Math.random()<dt*2)sparks(P.pos.x,.3,P.pos.z,3,0xff9ad0,3);return;}
+  if(A.wait>0){A.wait-=dt;if(A.wait<=0)nextRoutine();return;}const b=$('dBeat');if(b){const beat=60/A.bpm,ph=((performance.now()-A.t0)/1000%beat)/beat;b.style.transform=`scale(${1+Math.max(0,1-ph*4)*.5})`;b.style.opacity=.4+Math.max(0,1-ph*3)*.6;}}
+function finishRoutine(){const A=ART,q=clamp(A.ok/A.rounds*.7+(A.taps?A.onb/A.taps:0)*.3,0,1),aud=audience();artClose();const tips=Math.round((6+SV.lv*2.5)*q*(1+aud*.35));SV.gold+=tips;
+  banner('💃 ROUTINE COMPLETE<small>'+A.ok+'/'+A.rounds+' COMBOS · '+Math.round(A.taps?A.onb/A.taps*100:0)+'% ON BEAT'+(aud?' · '+aud+' WATCHING':'')+' · +◆ '+tips+'</small>',3);
+  artReward('dance',q,1.1+callLv('dance')*.03);qEvent('dance');if(q>=.9)qEvent('dperfect');if(!inTown(P.pos))qEvent('dancezone');SFX.chest();}
+
+/* ----- menus ----- */
+function openArts(){if(!SV.calls||!Object.keys(SV.calls).length){toast('Learn a calling from Maestra Lyra in Emberhold');return;}curNpc={d:{n:'Your Callings',role:'Perform · Cook · Write · Film · Dance',ic:'🎭',line:''}};dlgView='arts';showDlg();}
+let artsTab=null;
+function renderArtsMenu(){const ks=Object.keys(SV.calls);if(!artsTab||!SV.calls[artsTab])artsTab=ks[0];let h=`<div class="tabs">${ks.map(k=>`<button class="pb ${artsTab===k?'on':''}" data-act="atab:${k}">${CALLS[k].ic} ${CALLS[k].n.split(' ')[0]}</button>`).join('')}</div>`;
+  const k=artsTab,c=SV.calls[k];h+=`<div class="qh">${CALLS[k].ic} ${CALLS[k].n.toUpperCase()} <span>Lv ${c.lv}/${CALLCAP}</span></div><div class="qp"><i style="width:${c.lv>=CALLCAP?100:c.xp/callNeed(c.lv)*100}%"></i><span>${c.lv>=CALLCAP?'MAX':c.xp+' / '+callNeed(c.lv)}</span></div>`;
+  if(k==='music'){const own=Object.keys(INSTR).filter(i=>(SV.inst||[]).includes(i));if(!SV.artInst||!own.includes(SV.artInst))SV.artInst=own[own.length-1]||'lute';
+    h+=`<div class="qh">INSTRUMENT</div><div class="chips">${own.map(i=>`<button class="chip ${SV.artInst===i?'sel':''}" data-act="ainst:${i}">${INSTR[i].ic} ${INSTR[i].n}</button>`).join('')}</div><div class="qh">SONGS</div>`;
+    SONGS.forEach((S,i)=>{const ok=c.lv>=S.lv;h+=`<div class="mrow"><div class="mi">${ok?'🎼':'🔒'}</div><div><b>${S.n}</b><small>${ok?`${S.bpm} bpm · ${S.len} notes`:'Unlocks at Musician '+S.lv}</small></div><button class="pb gold" data-act="aplay:${i}" ${ok?'':'disabled'}>Perform</button></div>`;});
+    h+=`<div style="font-size:11px;opacity:.65">Perform near townsfolk or other players for bigger tips. Better instruments earn more XP.</div>`;}
+  if(k==='chef')RECIPES.forEach((r,i)=>{const ok=c.lv>=r.lv,can=ok&&canCook(r);h+=`<div class="mrow"><div class="mi">${ok?r.ic:'🔒'}</div><div><b>${r.n}</b> <span class="sp">own ${invN(r.id)}</span><small>${ok?Object.entries(r.m).map(([m,n])=>`<span style="color:${invN(m)>=n?'#9fff9a':'#ff9a8a'}">${MATS[m].ic}${invN(m)}/${n}</span>`).join(' '):'Chef '+r.lv}</small><small>${r.d}</small></div><button class="pb gold" data-act="acook:${i}" ${can?'':'disabled'}>${r.bake?'Bake':'Cook'}</button></div>`;});
+  if(k==='chef')h+=`<div style="font-size:11px;opacity:.65">Buy pantry goods from Maestra Lyra. Herbs come from Herbalism (or other players’ shops). Eat dishes from your Items bag.</div>`;
+  if(k==='writer'){h+=`<div class="pts">💡 Inspiration ${SV.insp||0}/10</div>`;WORKS.forEach((W,i)=>{const ok=c.lv>=W.lv;h+=`<div class="mrow"><div class="mi">${ok?W.ic:'🔒'}</div><div><b>${W.n}</b> <span class="sp">own ${invN(W.id)}</span><small>${ok?`${W.cost} inspiration · ${W.rounds} lines · worth ◆ ${W.v}`:'Writer '+W.lv}</small></div><button class="pb gold" data-act="awrite:${i}" ${ok&&(SV.insp||0)>=W.cost?'':'disabled'}>Write</button></div>`;});
+    h+=`<div style="font-size:11px;opacity:.65">Inspiration comes from exploring new regions, discovering camps, finishing quests, beating bosses — and slowly over time.</div>`;}
+  if(k==='film'){if(!SV.camera)h+=`<div class="say">You need a camera — Maestra Lyra sells them.</div>`;GENRES.forEach((G,i)=>{const ok=c.lv>=G.lv;h+=`<div class="mrow"><div class="mi">${ok?'🎬':'🔒'}</div><div><b>${G.n}</b> <span class="sp">own ${invN('reel_'+G.id)}</span><small>${ok?'Shots: '+G.shots.map(s=>SUBJ[s].split(' (')[0]).join(' · '):'Filmmaker '+G.lv}</small></div><button class="pb gold" data-act="afilm:${i}" ${ok&&SV.camera?'':'disabled'}>Shoot</button></div>`;});
+    h+=`<div style="font-size:11px;opacity:.65">While filming you can walk around freely. Center each subject in frame and tap 📸.</div>`;}
+  if(k==='dance'){h+=`<button class="pb gold wide" data-act="aroutine">💃 Dance routine (XP)</button><div class="qh">FREESTYLE</div><div class="chips">${MOVES.map(m=>`<button class="chip ${c.lv>=m[2]?'':'lock'}" data-act="afree:${m[0]}" ${c.lv>=m[2]?'':'disabled'}>${m[1]}${c.lv>=m[2]?'':' <small>Lv '+m[2]+'</small>'}</button>`).join('')}</div>
+    <div style="font-size:11px;opacity:.65">Freestyle anywhere — earn a little Dancer XP and tips from anyone watching.</div>`;}
+  return h;}
+let lyraTab='learn',unlArmC=null;
+function renderLyra(){let h=`<div class="tabs">${[['learn','🎭 Callings'],['shop','🛒 Shop'],['pub','📣 Publish']].map(([t,n])=>`<button class="pb ${lyraTab===t?'on':''}" data-act="ltab:${t}">${n}</button>`).join('')}</div>`;
+  SV.calls=SV.calls||{};const n=Object.keys(SV.calls).length;
+  if(lyraTab==='learn'){h+=`<div style="font-size:11px;opacity:.75;text-align:center;margin-bottom:6px">Callings let you level up without fighting. You can follow up to ${MAXCALL}.</div>`;
+    for(const k in CALLS){const has=SV.calls[k];h+=`<div class="mrow"><div class="mi">${CALLS[k].ic}</div><div><b>${CALLS[k].n}</b>${has?` <span class="sp">Lv ${has.lv}</span>`:''}<small>${CALLS[k].d}</small></div>${has?`<button class="pb off" data-act="cforget:${k}">${unlArmC===k?'Sure?':'Forget'}</button>`:`<button class="pb gold" data-act="clearn:${k}" ${n<MAXCALL?'':'disabled'}>Learn</button>`}</div>`;}}
+  else if(lyraTab==='shop'){h+=`<div class="pts">◆ ${SV.gold.toLocaleString()} gold</div>`;
+    if(callLv('music')){h+=`<div class="qh">🎵 INSTRUMENTS</div>`;for(const i in INSTR){const I=INSTR[i],own=(SV.inst||[]).includes(i);if(!I.p)continue;h+=`<div class="mrow"><div class="mi">${I.ic}</div><div><b>${I.n}</b><small>Musician ${I.lv} · +${Math.round((I.m-1)*100)}% XP from performing</small></div><button class="pb" data-act="binst:${i}" ${own||callLv('music')<I.lv||SV.gold<I.p?'disabled':''}>${own?'Owned':'◆ '+I.p.toLocaleString()}</button></div>`;}}
+    if(callLv('film'))h+=`<div class="qh">🎬 FILM GEAR</div><div class="mrow"><div class="mi">📷</div><div><b>Field Camera</b><small>Lets you shoot films anywhere.</small></div><button class="pb" data-act="bcam" ${SV.camera||SV.gold<800?'disabled':''}>${SV.camera?'Owned':'◆ 800'}</button></div>`;
+    h+=`<div class="qh">🧺 PANTRY</div>`;for(const k in PANTRY){const p=PANTRY[k][2];h+=`<div class="mrow"><div class="mi">${PANTRY[k][1]}</div><div><b>${PANTRY[k][0]}</b> <span class="sp">own ${invN(k)}</span></div><div style="display:flex;gap:4px"><button class="pb" data-act="bpan:${k}:1" ${SV.gold>=p?'':'disabled'}>◆ ${p}</button><button class="pb" data-act="bpan:${k}:5" ${SV.gold>=p*5?'':'disabled'}>×5</button></div></div>`;}}
+  else{const items=[...WORKS.map(w=>w.id),...GENRES.map(g=>'reel_'+g.id)].filter(id=>invN(id)>0);if(!items.length)h+=`<div class="say">Bring me your poems, stories and film reels — I’ll publish books and premiere films for gold, XP and fame.</div>`;
+    for(const id of items){const it=itemInfo(id),reel=id.startsWith('reel_');h+=`<div class="mrow"><div class="mi">${it.ic}</div><div><b>${it.n}</b> <span class="sp">×${invN(id)}</span><small>${reel?'Premiere':'Publish'} for ◆ ${Math.round(it.v*1.4).toLocaleString()} + XP + fame</small></div><button class="pb gold" data-act="pub:${id}">${reel?'Premiere':'Publish'}</button></div>`;}}
+  return h;}
+const ARTACT={
+  atab:k=>{artsTab=k;},ainst:i=>{SV.artInst=i;},aplay:i=>{startPerform(+i,SV.artInst||'lute');return'closed';},acook:i=>{startCook(+i);return ART?'closed':undefined;},awrite:i=>{startWrite(+i);return ART?'closed':undefined;},
+  afilm:i=>{startFilm(+i);return'closed';},aroutine:()=>{startRoutine();return ART?'closed':undefined;},afree:m=>{startFree(m);return ART?'closed':undefined;},
+  ltab:t=>{lyraTab=t;},
+  clearn:k=>{SV.calls=SV.calls||{};if(Object.keys(SV.calls).length>=MAXCALL||SV.calls[k])return;SV.calls[k]={lv:1,xp:0};if(k==='music'){SV.inst=SV.inst||[];if(!SV.inst.includes('lute'))SV.inst.push('lute');}if(k==='writer')SV.insp=Math.max(SV.insp||0,3);if(k==='chef'){invAdd('flour',4);invAdd('sunpetal',2);}
+    SFX.level();banner(CALLS[k].ic+' NEW CALLING<small>'+CALLS[k].n.toUpperCase()+' · OPEN 🎭 TO BEGIN</small>',3);refreshArtBtn();save();},
+  cforget:k=>{if(unlArmC!==k){unlArmC=k;setTimeout(()=>{unlArmC=null;},4000);return;}unlArmC=null;delete SV.calls[k];toast('Forgot '+CALLS[k].n);refreshArtBtn();save();},
+  binst:i=>{const I=INSTR[i];if(SV.gold<I.p||callLv('music')<I.lv)return;SV.gold-=I.p;SV.inst=SV.inst||[];SV.inst.push(i);SV.artInst=i;SFX.chest();toast(I.ic+' '+I.n+' bought!');save();},
+  bcam:()=>{if(SV.gold<800||SV.camera)return;SV.gold-=800;SV.camera=true;SFX.chest();toast('📷 Camera bought!');save();},
+  bpan:(k,n)=>{n=+n;const p=PANTRY[k][2]*n;if(SV.gold<p)return;SV.gold-=p;invAdd(k,n);SFX.coin();save();},
+  pub:id=>{if(invN(id)<=0)return;const it=itemInfo(id),reel=id.startsWith('reel_');invAdd(id,-1);const g=Math.round(it.v*1.4);SV.gold+=g;const xp=Math.round(xpNeed(SV.lv)*(reel?.05:.035)*(it.v/400+.5));gainXp(xp);gainFame(reel?8:5,P.pos);
+    if(reel){callXp('film',25);qEvent('premiere');banner('🎞️ PREMIERE NIGHT<small>THE CROWD ROARS · +◆ '+g.toLocaleString()+' · +'+xp+' XP</small>',3);}else{callXp('writer',20);qEvent('publish');banner('📣 PUBLISHED<small>'+it.n.toUpperCase()+' · +◆ '+g.toLocaleString()+' · +'+xp+' XP</small>',3);}
+    SFX.level();save();}};
+function refreshArtBtn(){$('artBtn').classList.toggle('hidden',!(SV&&SV.calls&&Object.keys(SV.calls).length));}
+Object.assign(PROFACT,ARTACT,{openarts:()=>{closeDlg();openArts();return'closed';}});
+$('artBtn').addEventListener('click',()=>{if(ART){artCancel();return;}openArts();});
+$('arts').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.mb!=null){}else if(b.dataset.cook)cookTap();else if(b.dataset.rh!=null)rhymePick(b.dataset.rh);else if(b.dataset.da!=null)danceTap(+b.dataset.da);
+  else if(b.dataset.dm){ART.mv=b.dataset.dm;document.querySelectorAll('#arts [data-dm]').forEach(x=>x.classList.toggle('sel',x===b));}else if(b.dataset.ax)artCancel();});
+$('arts').addEventListener('pointerdown',e=>{const b=e.target.closest('[data-mb]');if(b){e.preventDefault();musicHit(+b.dataset.mb);b.dataset.pd=1;}},{passive:false});
+$('filmShutter').addEventListener('click',filmShot);$('filmExit').addEventListener('click',()=>artCancel('Filming cancelled'));
+addEventListener('keydown',e=>{if(!ART)return;const k=e.key.toLowerCase();
+  if(ART.k==='music'){const l={a:0,s:1,d:2,j:0,k:1,l:2}[k];if(l!=null){musicHit(l);e.stopPropagation();}}
+  else if(ART.k==='chef'&&(k===' '||k==='enter')){cookTap();e.preventDefault();e.stopPropagation();}
+  else if(ART.k==='dance'&&ART.routine){const i={arrowleft:0,arrowup:1,arrowdown:2,arrowright:3}[k];if(i!=null){danceTap(i);e.preventDefault();e.stopPropagation();}}
+  else if(ART.k==='film'&&(k===' '||k==='f')){filmShot();e.preventDefault();e.stopPropagation();}},true);
+
+const AQ=[
+ {id:'qa_busk',g:'lyra',call:'music',clv:1,min:1,max:100,t:'Street Busker',d:'Perform {n} songs anywhere.',type:'perform',n:3,gold:80,xp:.35},
+ {id:'qa_crowd',g:'lyra',call:'music',clv:4,min:1,max:100,t:'Crowd Pleaser',d:'Perform for 4+ listeners (townsfolk or friends) {n} times.',type:'crowd',n:2,gold:150,xp:.45},
+ {id:'qa_bard',g:'lyra',call:'music',clv:8,min:1,max:100,t:'Traveling Bard',d:'Perform at a road camp {n} times.',type:'perfout',n:2,gold:220,xp:.5},
+ {id:'qa_virt',g:'lyra',call:'music',clv:12,min:1,max:100,t:'Virtuoso',d:'Score an A grade or better {n} times.',type:'mperfect',n:3,gold:400,xp:.6},
+ {id:'qa_cook',g:'lyra',call:'chef',clv:1,min:1,max:100,t:'Kitchen Apprentice',d:'Cook or bake {n} dishes.',type:'cook',n:3,gold:80,xp:.35,items:{flour:4,egg:2}},
+ {id:'qa_cperf',g:'lyra',call:'chef',clv:5,min:1,max:100,t:'The Perfect Plate',d:'Make {n} perfect dishes.',type:'cperfect',n:2,gold:180,xp:.5},
+ {id:'qa_feast',g:'lyra',call:'chef',clv:10,min:1,max:100,t:'Feed the Guard',d:'Brannoc’s soldiers are starving. Cook {n} dishes.',type:'cook',n:8,gold:350,xp:.6},
+ {id:'qa_lines',g:'lyra',call:'writer',clv:1,min:1,max:100,t:'Opening Lines',d:'Write {n} works of any kind.',type:'write',n:2,gold:80,xp:.35},
+ {id:'qa_muse',g:'lyra',call:'writer',clv:3,min:1,max:100,t:'Chasing the Muse',d:'Gather {n} inspiration on your travels.',type:'insp',n:5,gold:150,xp:.45},
+ {id:'qa_pub',g:'lyra',call:'writer',clv:6,min:1,max:100,t:'Read All About It',d:'Publish {n} works with me.',type:'publish',n:3,gold:220,xp:.5},
+ {id:'qa_novel',g:'lyra',call:'writer',clv:12,min:1,max:100,t:'The Great Novel',d:'Write a novel or an epic saga.',type:'novel',n:1,gold:500,xp:.7},
+ {id:'qa_reel',g:'lyra',call:'film',clv:1,min:1,max:100,t:'First Reel',d:'Shoot and finish {n} film.',type:'film',n:1,gold:100,xp:.4},
+ {id:'qa_shots',g:'lyra',call:'film',clv:3,min:1,max:100,t:'Through the Lens',d:'Capture {n} shots from your shot lists.',type:'shot',n:9,gold:160,xp:.45},
+ {id:'qa_prem',g:'lyra',call:'film',clv:8,min:1,max:100,t:'Premiere Night',d:'Premiere {n} films with me.',type:'premiere',n:2,gold:300,xp:.6},
+ {id:'qa_steps',g:'lyra',call:'dance',clv:1,min:1,max:100,t:'First Steps',d:'Finish {n} dance routines.',type:'dance',n:3,gold:80,xp:.35},
+ {id:'qa_show',g:'lyra',call:'dance',clv:6,min:1,max:100,t:'Showstopper',d:'Nail {n} routines at 90% or better.',type:'dperfect',n:2,gold:200,xp:.5},
+ {id:'qa_wild',g:'lyra',call:'dance',clv:10,min:1,max:100,t:'Dance the Wilds',d:'Finish {n} routines outside Emberhold.',type:'dancezone',n:3,gold:320,xp:.6},
+ {id:'qa_patron',g:'lyra',call:'any',clv:1,min:1,max:100,t:'Patron of the Arts',d:'Create {n} works with your callings.',type:'artwork',n:10,gold:300,xp:.6}];
+for(const q of AQ){QDEF.push(q);QBY[q.id]=q;}
+const qOk=(q,L)=>L>=q.min&&L<=q.max&&(!q.call||(q.call==='any'?!!(SV.calls&&Object.keys(SV.calls).length):callLv(q.call)>=(q.clv||1)));
 
 function drawMini(){const S=240,view=40,sc=S/(view*2);mx.clearRect(0,0,S,S);const toM0=(x,z)=>[(x-P.pos.x+view)*sc,(z-P.pos.z+view)*sc];
   mx.fillStyle='#111';mx.fillRect(0,0,S,S);mx.drawImage(mapC,(P.pos.x-view+MO)*2,(P.pos.z-view+MO)*2,view*4,view*4,0,0,S,S);
@@ -2849,10 +3161,22 @@ function hud(){const d=D2();const hpR=P.hp/d.maxHp;
   if(combo>=3){comboE.style.opacity=1;comboE.innerHTML=combo+'<small>HITS</small>';}else comboE.style.opacity=0;}
 
 /* ---------------- camera & loop ---------------- */
-const camOff=new THREE.Vector3(),camLook=new THREE.Vector3(),camPos=new THREE.Vector3(0,22,32);
-function updCamera(dt){const portrait=camera.aspect<1;const k=portrait?1.5:1.1;camOff.set(0,17*k,11*k);
+const camOff=new THREE.Vector3(),camLook=new THREE.Vector3(),camPos=new THREE.Vector3(0,22,32);let CZ=1;
+const ZPRE=[1,.72,.5,1.35],ZMIN=.4,ZMAX=1.7;
+function setZoom(z,show){SET.zoom=clamp(z,ZMIN,ZMAX);const b=$('zoomBtn');if(b)b.querySelector('small').textContent=(Math.round(10/SET.zoom)/10)+'×';if(show)toast('🔍 Zoom '+(Math.round(10/SET.zoom)/10)+'×');clearTimeout(setZoom.t);setZoom.t=setTimeout(save,600);}
+$('zoomBtn').addEventListener('click',()=>{const z=SET.zoom||1;let i=ZPRE.findIndex(p=>Math.abs(p-z)<.03);setZoom(ZPRE[(i+1)%ZPRE.length],true);});
+addEventListener('wheel',e=>{if(!playing||paused)return;if(e.target.closest&&e.target.closest('.panel,#arts,#dlg'))return;setZoom((SET.zoom||1)*(1+Math.sign(e.deltaY)*.08));},{passive:true});
+{let pd=0,pz=1;const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);const ok=e=>playing&&!paused&&e.touches.length===2&&[...e.touches].every(t=>t.target.tagName==='CANVAS'&&t.target.id!=='mini'||t.target.id==='joyZone');
+  addEventListener('touchstart',e=>{if(ok(e)){pd=dist(e.touches);pz=SET.zoom||1;}},{passive:true});
+  addEventListener('touchmove',e=>{if(pd&&e.touches.length===2){const d=dist(e.touches);setZoom(pz*pd/Math.max(30,d));}},{passive:true});
+  addEventListener('touchend',e=>{if(e.touches.length<2)pd=0;},{passive:true});}
+function setMini(big){SET.mmBig=big;$('hud').classList.toggle('mmbig',!!big);$('mmTog').textContent=big?'⤡':'⤢';}
+$('mmTog').addEventListener('click',e=>{e.stopPropagation();setMini(!SET.mmBig);save();});
+addEventListener('keydown',e=>{if(!playing||paused||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;const k=e.key.toLowerCase();if(k==='z'){$('zoomBtn').click();}else if(k==='n'){setMini(!SET.mmBig);save();}else if(k==='='||k==='+')setZoom((SET.zoom||1)*.9);else if(k==='-')setZoom((SET.zoom||1)*1.1);});
+setTimeout(()=>{setMini(!!SET.mmBig);setZoom(SET.zoom||1);},0);
+function updCamera(dt){const portrait=camera.aspect<1;const k=portrait?1.5:1.1;CZ=lerp(CZ,SET.zoom||1,Math.min(1,dt*8));camOff.set(0,17*k*Math.pow(CZ,1.25),11*k*CZ);
   const lead=P.mounted?2:0;const tx=P.pos.x+inp.x*lead,tz=P.pos.z+inp.z*lead;
-  camPos.lerp(V3.set(tx+camOff.x,camOff.y+P.flyH,tz+camOff.z),Math.min(1,dt*6));camera.position.copy(camPos);camLook.set(camPos.x,P.flyH*.85,camPos.z-camOff.z-1);
+  camPos.lerp(V3.set(tx+camOff.x,camOff.y+P.flyH,tz+camOff.z),Math.min(1,dt*6));camera.position.copy(camPos);camLook.set(camPos.x,P.flyH*.85+Math.max(0,1-CZ)*1.6,camPos.z-camOff.z-1);
   if(shake>0){camera.position.x+=rand(-1,1)*shake*.5;camera.position.y+=rand(-1,1)*shake*.5;shake=Math.max(0,shake-dt*2.5);}
   fovKick=Math.max(0,fovKick-dt*3);const fv=46-fovKick*5;if(Math.abs(camera.fov-fv)>.01){camera.fov=fv;camera.updateProjectionMatrix();}
   camera.lookAt(camLook);envUpdate(portrait);
@@ -2871,7 +3195,7 @@ function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/10
 function idle(dt){D.flap+=dt*12;D.pos.set(P.pos.x+1.6,1.7+Math.sin(time*6)*.2,P.pos.z+1);D.face=P.face;drag.root.position.copy(D.pos);drag.root.rotation.y=D.face;const fl=Math.sin(D.flap);drag.wings[0].rotation.z=-.3+fl*.7;drag.wings[1].rotation.z=.3-fl*.7;
   hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;hero.capeP.rotation.x=.15+Math.sin(time*4)*.05;}
 requestAnimationFrame(loop);
-window.__G={BEAST,useSkill,doAttack,GH,OWN,get enemies(){return enemies;},damageEnemy,spawnEnemy,get NET(){return NET;},gainFame,rankOf,hallEntries,GACT,get gEd(){return gEd;},showGInvite,guildMsg,get myPlate(){return myPlate;},openCustomize,get custMode(){return custMode;},COS,owns,defaultLook,PLOTS,HOMES,buildHome,get HOME(){return ACC.home;},homeCandidates,NET,hostInvite,joinInvite,hostAcceptReply,leaveNet,netSend,NODES,PROFACT,startGather,craftAlch,craftJewel,jSel,equipJewel,shopTick,itemValue,buildStall,get GEAR(){return gearBonus();},ZONES,OUTPOSTS,WAYS,teleport,zoneLevel,zoneIdx,openWorldMap,spawnEnemy,NPCS,openNpc,qEvent,invN,invAdd,inTown,get nearNpc(){return nearNpc;},rebuildHero,ACC,toggleMount,openMountPick,freeMountEligible,MOUNTS,get MOUNT(){return MOUNT;},P,get SV(){return SV;},enemies,spawnBoss,togglePanel,get boss(){return boss;},doAttack,useSkill,gainXp,CC,D2,openPromo,SK};
+window.__G={musicHit,cookTap,rhymePick,danceTap,filmShot,get ART(){return ART;},startPerform,startCook,startWrite,startFilm,startRoutine,startFree,ARTACT,openArts,BEAST,useSkill,doAttack,GH,OWN,get enemies(){return enemies;},damageEnemy,spawnEnemy,get NET(){return NET;},gainFame,rankOf,hallEntries,GACT,get gEd(){return gEd;},showGInvite,guildMsg,get myPlate(){return myPlate;},openCustomize,get custMode(){return custMode;},COS,owns,defaultLook,PLOTS,HOMES,buildHome,get HOME(){return ACC.home;},homeCandidates,NET,hostInvite,joinInvite,hostAcceptReply,leaveNet,netSend,NODES,PROFACT,startGather,craftAlch,craftJewel,jSel,equipJewel,shopTick,itemValue,buildStall,get GEAR(){return gearBonus();},ZONES,OUTPOSTS,WAYS,teleport,zoneLevel,zoneIdx,openWorldMap,spawnEnemy,NPCS,openNpc,qEvent,invN,invAdd,inTown,get nearNpc(){return nearNpc;},rebuildHero,ACC,toggleMount,openMountPick,freeMountEligible,MOUNTS,get MOUNT(){return MOUNT;},P,get SV(){return SV;},enemies,spawnBoss,togglePanel,get boss(){return boss;},doAttack,useSkill,gainXp,CC,D2,openPromo,SK};
 })();
 </script>
 </body>
