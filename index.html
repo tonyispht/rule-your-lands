@@ -180,6 +180,8 @@ textarea.code{width:100%;height:64px;font:11px monospace;border-radius:8px;borde
 #custom .panel{max-width:540px;max-height:57vh;overflow-y:auto;border-radius:16px 16px 0 0;margin-top:auto}
 @media (orientation:landscape){#custom{align-items:flex-end;background:linear-gradient(90deg,transparent 40%,#000a)}#custom::before,#custom::after{flex:1 0 0}#custom .panel{max-height:94vh;width:min(50vw,480px);border-radius:16px;margin-right:10px}}
 .gbrow{display:flex;gap:6px}
+#boostBar{position:fixed;left:calc(8px + env(safe-area-inset-left));top:calc(100px + env(safe-area-inset-top));z-index:6;display:flex;gap:4px;pointer-events:none}#boostBar span{background:#1a3a1ae0;border:1px solid #7dff8a;border-radius:8px;padding:1px 6px;font:900 11px Nunito;color:#dfffe0}
+#adSim{position:fixed;inset:0;z-index:60;background:#000e;display:grid;place-items:center}#adSim .adbox{text-align:center;color:#fff;background:#1e2a44;border:2px solid #e8c56a;border-radius:16px;padding:22px 30px;font:700 14px Nunito}
 @keyframes attnGlow{0%,100%{box-shadow:0 0 4px 1px #ffd04a88,0 0 0 0 #ffd04a55}50%{box-shadow:0 0 14px 4px #ffd04acc,0 0 0 5px #ffd04a22}}
 .attn{animation:attnGlow 1.3s ease-in-out infinite;position:relative}.tbtn.attn,#chBtn.attn{border-color:#ffd56a!important}
 .bdg{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#ff3a2a;border:2px solid #fff;color:#fff;font:900 10px/13px Nunito;text-align:center;pointer-events:none;box-shadow:0 1px 4px #0008;z-index:2}
@@ -193,7 +195,7 @@ textarea.code{width:100%;height:64px;font:11px monospace;border-radius:8px;borde
 #con .conh{font:900 14px Nunito;color:#4af07a;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}#conX{background:none;border:1px solid #4af07a;color:#4af07a;border-radius:6px;padding:2px 8px}
 #conLog{height:min(30vh,200px);overflow-y:auto;background:#000a;border-radius:8px;padding:6px;margin-bottom:6px;white-space:pre-wrap;word-break:break-word}
 #con .conq{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;max-height:18vh;overflow-y:auto}#con .conq .chip{font-size:11px;padding:4px 7px}#conIn{font:600 14px ui-monospace,Menlo,monospace;max-width:none;flex:1}
-#partyHud{position:fixed;left:calc(8px + env(safe-area-inset-left));top:calc(118px + env(safe-area-inset-top));z-index:6;display:flex;flex-direction:column;gap:4px;pointer-events:none}
+#partyHud{position:fixed;left:calc(8px + env(safe-area-inset-left));top:calc(124px + env(safe-area-inset-top));z-index:6;display:flex;flex-direction:column;gap:4px;pointer-events:none}
 #partyHud .pm{background:#0009;border:1px solid #ffffff30;border-radius:8px;padding:3px 7px;width:130px;font:800 11px Nunito;color:#fff}#partyHud .pm i{display:block;height:6px;background:#3a0a0a;border-radius:3px;overflow:hidden;margin-top:2px}#partyHud .pm u{display:block;height:100%;background:linear-gradient(90deg,#ff4a4a,#ff8a5a)}#partyHud .pm.dead{opacity:.6}#partyHud .pm.dead b::after{content:' 💀'}
 #revBtn{position:fixed;left:50%;bottom:34%;transform:translateX(-50%);z-index:9;width:240px;height:52px;border-radius:26px;border:3px solid #7dff8a;background:#0a2a12e0;color:#fff;font:900 14px Nunito;overflow:hidden;touch-action:none}#revBtn i{position:absolute;left:0;top:0;bottom:0;width:0;background:#2a9a3a}#revBtn b{position:relative}
 #revBar{position:fixed;left:50%;top:30%;transform:translateX(-50%);z-index:9;background:#2a0a0ae8;border:2px solid #ff6a5a;border-radius:12px;padding:10px 14px;color:#fff;font:800 13px Nunito;text-align:center;width:min(90vw,340px)}#revBar .pb{margin-top:6px}
@@ -259,7 +261,7 @@ img.emb{vertical-align:-3px;display:inline-block}
       <div id="buffs"></div>
     </div>
   </div>
-  <div id="sideBtns"><button class="tbtn" id="netBtn" title="Multiplayer">🌐</button><button class="tbtn hidden" id="chatBtn" title="Chat (Enter)">💬</button><button class="tbtn hidden" id="artBtn" title="Callings">🎭</button><button class="tbtn" id="zoomBtn" title="Zoom (scroll, pinch, or Z)">🔍<small>1×</small></button></div>
+  <div id="sideBtns"><button class="tbtn" id="netBtn" title="Multiplayer">🌐</button><button class="tbtn hidden" id="chatBtn" title="Chat (Enter)">💬</button><button class="tbtn hidden" id="artBtn" title="Callings">🎭</button><button class="tbtn hidden" id="adBtn" title="Video rewards (optional)">📺</button><button class="tbtn" id="zoomBtn" title="Zoom (scroll, pinch, or Z)">🔍<small>1×</small></button></div>
   <div id="chatLog"></div>
   <div id="chatBar" class="hidden"><input id="chatIn" maxlength="120" placeholder="Say something… (/p party · /g guild)"><button class="pb gold" id="chatSend">Send</button></div>
   <div id="topbtns"><button class="tbtn" id="chBtn" title="Character (C)">👤</button><button class="tbtn" id="upBtn" title="Forge (U)">⚒</button><button class="tbtn" id="loginBtn" title="Daily rewards">🎁</button><button class="tbtn" id="setBtn" title="Settings (Esc)">⚙</button></div>
@@ -303,7 +305,7 @@ img.emb{vertical-align:-3px;display:inline-block}
 <div id="login" class="ov ovdim hidden"><div class="panel"><h3>🎁 DAILY REWARDS</h3><div id="loginBody"></div><button class="pb close" id="loginClose">Close</button></div></div>
 <div id="con" class="hidden"><div class="conp"><div class="conh">🛠️ DEV CONSOLE <button id="conX">✖</button></div><div id="conLog"></div>
 <div class="conq"><button class="chip" data-cq="help">help</button><button class="chip" data-cq="level 10">Lv 10</button><button class="chip" data-cq="level 50">Lv 50</button><button class="chip" data-cq="level 100">Lv 100</button><button class="chip" data-cq="gold 1000000">+1M gold</button><button class="chip" data-cq="god">God</button><button class="chip" data-cq="heal">Heal</button><button class="chip" data-cq="speed 2">Speed ×2</button><button class="chip" data-cq="gear weapon legendary">Legendary weapon</button><button class="chip" data-cq="gear armor epic">Epic armor</button><button class="chip" data-cq="pet all">All pets</button><button class="chip" data-cq="mount all">All mounts</button><button class="chip" data-cq="unlockall">Unlock cosmetics</button><button class="chip" data-cq="egg 5">5 eggs</button><button class="chip" data-cq="time night">Night</button><button class="chip" data-cq="time day">Day</button><button class="chip" data-cq="weather rain">Rain</button><button class="chip" data-cq="weather snow">Snow</button><button class="chip" data-cq="weather clear">Clear sky</button><button class="chip" data-cq="kill">Kill nearby</button><button class="chip" data-cq="boss">Spawn boss</button><button class="chip" data-cq="tp dungeon 0">Dungeon</button><button class="chip" data-cq="tp town">Town</button><button class="chip" data-cq="calling music 30">Musician 30</button><button class="chip" data-cq="calling dance 30">Dancer 30</button></div><div class="row" style="margin:0"><input id="conIn" class="pin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type a command — help"><button class="pb gold" id="conGo">Run</button></div></div></div>
-<div id="partyHud" class="hidden"></div><button id="revBtn" class="hidden"><i></i><b>✚ Hold to revive</b></button><div id="revBar" class="hidden">💀 You’re down! A party member can revive you… <button class="pb" id="revNow">Respawn now</button></div>
+<div id="partyHud" class="hidden"></div><div id="boostBar"></div><div id="adSim" class="hidden"><div class="adbox"><div style="font:900 13px Nunito;opacity:.7">TEST AD · simulated</div><div style="font-size:54px">📺</div><div style="font:900 18px Cinzel,serif;color:#ffd56a">Your ad could be here</div><div id="adSimT" style="margin:8px 0">Reward in 5s</div><button class="pb gold" id="adSimX">✖ Skip</button></div></div><button id="revBtn" class="hidden"><i></i><b>✚ Hold to revive</b></button><div id="revBar" class="hidden">💀 You’re down! A party member can revive you… <button class="pb" id="revNow">Respawn now</button></div>
 <div id="arts" class="hidden"><div class="artp"><button class="artx" data-ax="1">✖</button><div id="artsBody"></div></div></div>
 <div id="filmHud" class="hidden"><i class="fc tl"></i><i class="fc tr"></i><i class="fc bl"></i><i class="fc br"></i><div class="frec">● REC</div><div id="filmList"></div><button id="filmShutter">📸</button><button id="filmExit">✖</button></div>
 <div id="custom" class="ov hidden"><div class="panel"><h3>✨ YOUR HERO</h3><div id="customBody"></div></div></div>
@@ -913,7 +915,7 @@ function D2(){const c=CC(),s=tot(),L=SV.lv,sw=1+.12*SV.up.sw;
   const def=(s.con*.5+L*.5+(gb.def||0))*(1+buffV('def')+buffV('pdef'));
   return{s,c,phys:phys*am,mag:mag*am,holy:holy*am,maxHp,maxMp,def,dr:clamp(def/(def+70),0,.8),
     crit:Math.min(.65,.05+s.dex*.0015+buffV('crit')+(gb.crit||0)),eva:Math.min(.3,s.dex*.0008+(gb.eva||0)),aspd:Math.min(2,(1+s.dex*.002)*(1+buffV('aspd')+(gb.aspd||0))),
-    mpReg:1+s.wis*.05+s.int*.03,hpReg:maxHp*.004+s.con*.03,spd:7.2*Math.min(1.15,1+s.dex*.0005)*(c.spd||1)*(1+buffV('spd')+buffV('pspd')+(gb.spd||0))*SPDX,
+    mpReg:1+s.wis*.05+s.int*.03,hpReg:maxHp*.004+s.con*.03,spd:7.2*Math.min(1.15,1+s.dex*.0005)*(c.spd||1)*(1+buffV('spd')+buffV('pspd')+(gb.spd||0))*SPDX*(boostOn('spd')?1.15:1),
     pet:(11+3*(L-1))*(1+.25*SV.up.dr)*(1+buffV('pet'))};}
 const atkOf=(d,t)=>t==='mag'?d.mag:t==='holy'?d.holy:d.phys;
 const xpNeed=L=>Math.floor(45*Math.pow(L,1.4)+25);
@@ -1067,16 +1069,16 @@ function killEnemy(e,rw){
     const c=makeChest();c.x=e.pos.x;c.z=e.pos.z+3;c.lvl=e.lvl;c.open=false;c.t=0;c.big=true;c.root.position.set(c.x,0,c.z);c.root.scale.setScalar(1.5);chests.push(c);}
   if(!rw)return;
   const dm=diffMult(e.lvl-SV.lv);const xp=Math.max(1,Math.round(xpBase(e.lvl)*(e.d.xpM||1)*dm*(e.night?1.25:1)));if(e.night)qEvent('nightkill');const g=Math.max(1,Math.round(rand(e.d.gold[0],e.d.gold[1])*(1+.15*(e.lvl-1))*clamp(dm,.25,1.5)));
-  const rs=rw===true?1:rw;const g2=Math.round(g*(1+petBonus().gold)*rs);SV.gold+=g2;SV.kills++;qEvent('kill',e.boss?'boss':e.type);if(P.mounted)qEvent('mounted');if(e.boss)qEvent('boss');
+  const rs=rw===true?1:rw;const g2=Math.round(g*(1+petBonus().gold)*rs*(boostOn('gold')?1.5:1));SV.gold+=g2;SV.kills++;qEvent('kill',e.boss?'boss':e.type);if(P.mounted)qEvent('mounted');if(e.boss)qEvent('boss');
   setTimeout(()=>{showNum(e.pos,'+'+g2+' ◆','gold',1.4);SFX.coin();},120);
   showNum(e.pos,'+'+Math.round(xp*rs)+' XP','xp',.8);
   for(let i=0;i<(e.boss?20:5);i++)part(e.pos.x+rand(-1,1),.6,e.pos.z+rand(-1,1),rand(-2,2),rand(4,8),rand(-2,2),0xffd54a,.35,1,{g:14});
   if(e.boss){SV.bosses++;invAdd('hp',2);invAdd('mp',2);banner('VICTORY<small>CINDERHORN DEFEATED · +2 HEALTH & MANA POTIONS</small>',3);shake=1;SFX.boom();}
   else killsSinceBoss++;
   gainXp(Math.round(xp*rs));gainFame(e.boss?60+e.lvl*2:(dm>=1?2:dm>=.6?1:0),e.pos);
-  {const ch=e.boss?1:e.d.elite?.35:.07;if(Math.random()<ch*(e.night?1.35:1))lootGear(e.lvl,e.pos.x,e.pos.z,e.boss?2:e.d.elite?1:0,e.boss?.08:e.d.elite?.03:0);if(Math.random()<(e.boss?.25:e.d.elite?.025:.002)&&invAdd('petegg',1))setTimeout(()=>{toast('🥚 You found a Mysterious Egg!');SFX.chest();},700);}
+  {const ch=e.boss?1:e.d.elite?.35:.07;if(Math.random()<ch*(e.night?1.35:1)*(boostOn('luck')?1.6:1))lootGear(e.lvl,e.pos.x,e.pos.z,e.boss?2:e.d.elite?1:0,e.boss?.08:e.d.elite?.03:0);if(Math.random()<(e.boss?.25:e.d.elite?.025:.002)*(boostOn('luck')?1.6:1)&&invAdd('petegg',1))setTimeout(()=>{toast('🥚 You found a Mysterious Egg!');SFX.chest();},700);}
 }
-function gainXp(x){if(SV.lv>=100)return;x=Math.round(x*(1+buffV('rested')+petBonus().xp));SV.xp+=x;let up=0;
+function gainXp(x){if(SV.lv>=100)return;x=Math.round(x*(1+buffV('rested')+petBonus().xp+(boostOn('xp')?.5:0)));SV.xp+=x;let up=0;
   while(SV.lv<100&&SV.xp>=xpNeed(SV.lv)){SV.xp-=xpNeed(SV.lv);SV.lv++;up++;const c=CC();for(const k in c.grow)SV.st[k]+=c.grow[k];SV.free+=3;SV.sp+=1;}
   if(up){const d=D2();P.hp=d.maxHp;P.mp=d.maxMp;gainFame(up*(5+SV.lv*2));updNameplate();
     const newSk=CC().sk.map((s,i)=>UNLOCK[i]===SV.lv?SK[s].n:null).filter(Boolean);
@@ -1570,7 +1572,7 @@ function openPromo(){if(CC().tier!==1||!playing)return;const c=CC();paused=true;
     ringFx(P.pos.x,P.pos.z,8,0xffd060,1);pillar(P.pos.x,P.pos.z,2,24,0xffe080,1.6);screenFlash('#fff0c0',.45,.8);refreshMountBtn();
     if(freeMountEligible())setTimeout(openMountPick,2200);});}
 function ensureLook(){SV.fame=SV.fame||0;if(SV.guild&&!ACC.guilds[SV.guild.id])SV.guild=null;if(SV.look)for(const k of['trail','glow','orbit'])if(!SV.look[k]||!COS[k][SV.look[k]])SV.look[k]='none';if(SV.look&&typeof SV.look.cape!=='number')SV.look.cape=PAL[CL[SV.cls].parent||SV.cls].cape;if(!SV.look){SV.look=defaultLook(SV.cls);SV.freeRename=true;for(const k of starterUnlocks(SV.cls))if(!ACC.wardrobe.includes(k))ACC.wardrobe.push(k);saveAcc();}if(!SV.name)SV.name=CL[SV.cls].n;}
-function rebuildHero(){ensureLook();setTimeout(syncMyPets,0);setTimeout(weaponGlow,0);cnameK='';updNameplate();refreshArtBtn();refreshMountBtn();if(hero){scene.remove(hero.root);}hero=makeHero(CC(),SV.look);hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;applyShadows();refreshSkillBtns();
+function rebuildHero(){ensureLook();setTimeout(refreshAdHud,0);setTimeout(syncMyPets,0);setTimeout(weaponGlow,0);cnameK='';updNameplate();refreshArtBtn();refreshMountBtn();if(hero){scene.remove(hero.root);}hero=makeHero(CC(),SV.look);hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;applyShadows();refreshSkillBtns();
   $('pIcon').textContent=CL[SV.cls].ic;$('atkIc').textContent={sword:'⚔️',greatsword:'🗡️',axe:'🪓',greataxe:'🪓',mace:'🔨',daggers:'🔪',claws:'🐾',bow:'🏹',staff:'🪄',rune:'🔯',gun:'🔫'}[CC().wpn];}
 function refreshSkillBtns(){if(!SV)return;const c=CC();for(let i=0;i<4;i++){const b=$('k'+(i+1)),id=c.sk[i];const un=SV.lv>=UNLOCK[i]&&id;
   b.querySelector('.ic').textContent=id?SK[id].ic:'🔒';b.classList.toggle('lock',!un);b.querySelector('.mpc').textContent=un?skillCost(id):'Lv '+UNLOCK[i];b.title=id?SK[id].n:'';}}
@@ -1758,6 +1760,7 @@ function renderDlg(){const d=curNpc.d;let h=`<h3>${d.ic} ${d.n.toUpperCase()}</h
   else if(dlgView==='lyra')h+=back+renderLyra();
   else if(dlgView==='pip')h+=back+renderPip();
   else if(dlgView==='kord')h+=back+renderKord();
+  else if(dlgView==='ads')h+=renderAds();
   else if(dlgView==='gate')h+=back+renderGate();
   else if(dlgView==='arts')h+=renderArtsMenu();
   else if(dlgView==='gh')h+=back+renderGuildHall();
@@ -2303,7 +2306,7 @@ function renderLand(){const n=curNpc,p=n.plot,h=H();let s='';
   if(h.size<4){const c=Math.round(p.price*PLOT_EXP[h.size]);s+=`<div class="mrow"><div class="mi">📐</div><div><b>Expand to size ${h.size+1}</b><small>${PLOT_R[h.size]*2}m across · ${PLOT_BEDS[h.size]} garden beds</small></div><button class="pb gold" data-act="hexp" ${SV.gold>=c?'':'disabled'}>◆ ${c.toLocaleString()}</button></div>`;}
   s+=`<div class="qh">🏠 HOME <span>${tier>=0?HOMES[tier].ic+' '+HOMES[tier].n:'nothing built yet'}</span></div>`;
   if(h.build){const t=HOMES[HTIER(h.build.type)],rem=(h.build.start+h.build.dur*1000-Date.now())/1000,pr=1-rem/h.build.dur,hc=Math.ceil(rem/60)*t.gpm;
-    s+=`<div class="mrow"><div class="mi">🏗️</div><div><b>Building ${t.n}</b><div class="qp" style="margin:4px 0"><i style="width:${pr*100}%"></i><span>${fmtT(rem)} left</span></div><small>Construction continues while you’re away.</small></div><button class="pb" data-act="hhurry" ${SV.gold>=hc?'':'disabled'}>Finish now<br>◆ ${hc.toLocaleString()}</button></div>`;}
+    s+=`<div class="mrow"><div class="mi">🏗️</div><div><b>Building ${t.n}</b><div class="qp" style="margin:4px 0"><i style="width:${pr*100}%"></i><span>${fmtT(rem)} left</span></div><small>Construction continues while you’re away.</small></div><button class="pb" data-act="hhurry" ${SV.gold>=hc?'':'disabled'}>Finish now<br>◆ ${hc.toLocaleString()}</button>${adsOn()?'<button class="pb" data-act="adw:home" style="margin-left:4px">📺<br>−30 min</button>':''}</div>`;}
   else{const nx=HOMES[tier+1];if(nx){const okSize=h.size>=nx.size;s+=`<div class="mrow"><div class="mi">${nx.ic}</div><div><b>Build ${nx.n}</b> <span class="sp">${fmtT(nx.dur)}</span><small>${nx.perk}</small>${okSize?'':`<small style="color:#ff9a8a">Needs land size ${nx.size}</small>`}</div><button class="pb gold" data-act="hbuild" ${okSize&&SV.gold>=nx.cost?'':'disabled'}>◆ ${nx.cost.toLocaleString()}</button></div>`;}
     else s+=`<div class="say" style="opacity:.8">Your manor is complete — the finest home in the realm.</div>`;}
   if(tier>=0)s+=`<div style="font-size:11px;opacity:.75;margin:4px 0">Perks: ${HOMES.slice(0,tier+1).map(x=>x.perk).join(' ')}</div>`;
@@ -2636,7 +2639,7 @@ function remoteLabel(r){return drawPlate(r.labC||(r.labC=document.createElement(
 let myPlate=null,myPlateC=null;
 function updNameplate(){if(!SV)return;if(!myPlate){myPlateC=document.createElement('canvas');myPlate=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(myPlateC),transparent:true,depthWrite:false,depthTest:false}));myPlate.scale.set(3.4,.85,1);myPlate.renderOrder=7;scene.add(myPlate);}
   drawPlate(myPlateC,{name:SV.name||CL[SV.cls].n,lv:SV.lv,cls:SV.cls,g:myGuildPub(),rk:rankOf(SV.fame||0),col:'#ffffff'});myPlate.material.map.needsUpdate=true;}
-function updWearFrame(dt){if(playing){attnUpdate(dt);guideFrame(dt);}if(playing){dgFrame(dt);duelFrame(dt);stageFrame(dt);gateDeco(dt);}partyFrame(dt);if(SV)packUpd(myPack,P.pos.x,P.flyH>1?P.flyH:0,P.pos.z,dt,playing&&!custMode);coopFlush(dt);artFrame(dt);if(playing)updClock(dt);if(myPlate){const on=SV&&hero&&playing&&!custMode&&SET.plate!==false&&!P.dead;myPlate.visible=!!on;if(on){const p=hero.root.position;myPlate.position.set(p.x,p.y+hero.body.position.y+(P.mounted?3.1:2.65),p.z);{const k=clamp(CZ,.55,1);myPlate.scale.set(3.4*k,.85*k,1);}}}
+function updWearFrame(dt){adFrame(dt);if(playing){attnUpdate(dt);guideFrame(dt);}if(playing){dgFrame(dt);duelFrame(dt);stageFrame(dt);gateDeco(dt);}partyFrame(dt);if(SV)packUpd(myPack,P.pos.x,P.flyH>1?P.flyH:0,P.pos.z,dt,playing&&!custMode);coopFlush(dt);artFrame(dt);if(playing)updClock(dt);if(myPlate){const on=SV&&hero&&playing&&!custMode&&SET.plate!==false&&!P.dead;myPlate.visible=!!on;if(on){const p=hero.root.position;myPlate.position.set(p.x,p.y+hero.body.position.y+(P.mounted?3.1:2.65),p.z);{const k=clamp(CZ,.55,1);myPlate.scale.set(3.4*k,.85*k,1);}}}
   if(SV&&hero&&(custMode||(playing&&!paused))){animWear(hero,dt);emitWear(hero,custMode?custLook:SV.look,dt,!!custMode);}
   if(SV&&NET.role!=='off'){metaT-=dt;if(metaDirty&&metaT<=0){metaT=3;metaDirty=false;netSend({t:'meta',fame:SV.fame||0,g:myGuildPub()});}}}
 
@@ -3330,7 +3333,7 @@ function setLevel(n){n=clamp(Math.round(n),1,100);const c=CC(),base=CL[c.parent|
   const spent=Object.values(SV.sr||{}).reduce((a,r)=>a+Math.max(0,Math.min(5,r)-1),0);SV.sp=Math.max(0,(n-1)-spent);GEARC=null;const d=D2();P.hp=d.maxHp;P.mp=d.maxMp;refreshSkillBtns();updNameplate();lastHud='';if(n>=10&&CC().tier===1)setTimeout(openPromo,400);}
 const CMDS={
   help:()=>{conLog('level N · xp N · gold N · fame N · heal · god · speed X · kill · boss · spawn TYPE [LV] [N]','#9ae0ff');conLog('give ID [N] · items · gear [weapon|armor|helm|boots|any] [common|rare|epic|legendary] [LV] · egg [N]','#9ae0ff');
-    conLog('pet ID|all · mount ID|all · calling ID LV · insp N · unlockall · class ID · tp town|X Z|dungeon N|arena · time HOUR|day|night|auto · weather rain|snow|storm|ash|motes|fog|clear|auto · elo N · save','#9ae0ff');},
+    conLog('pet ID|all · mount ID|all · calling ID LV · insp N · unlockall · class ID · tp town|X Z|dungeon N|arena · time HOUR|day|night|auto · weather rain|snow|storm|ash|motes|fog|clear|auto · elo N · ads [sim] · save','#9ae0ff');},
   level:a=>{setLevel(+a[0]||1);return'Level → '+SV.lv;},lvl:a=>CMDS.level(a),
   xp:a=>{gainXp(+a[0]||0);return'+'+(+a[0]||0)+' XP';},gold:a=>{SV.gold=Math.max(0,SV.gold+(+a[0]||0));return'Gold: '+SV.gold.toLocaleString();},
   fame:a=>{gainFame(+a[0]||0);return'Fame: '+(SV.fame||0);},heal:()=>{const d=D2();P.hp=d.maxHp;P.mp=d.maxMp;P.dead=false;return'Healed';},
@@ -3353,6 +3356,7 @@ const CMDS={
     if(a[0]==='arena'){duelStart(rivalOpts()[1]);return'Arena duel';}const x=+a[0],z=+a[1];if(isNaN(x)||isNaN(z))return'tp town | tp X Z | tp dungeon N | tp arena';if(INST)instLeave(true);P.pos.set(x,0,z);return'Teleported';},
   time:a=>{const v=a[0];if(v==='auto'){TOD_OV=null;return'Time: real clock';}TOD_OV=v==='day'?.5:v==='night'?0:clamp((+v||0)/24,0,.999);TOD=TOD_OV;NIGHT=nightF(TOD);return'Time → '+clockTxt();},
   weather:a=>{const v=a[0];if(v==='auto'){WX_OV=undefined;return'Weather: automatic';}WX_OV=v==='clear'?null:WXDEF[v]?v:undefined;return'Weather → '+(v||'auto');},
+  ads:a=>{if(a[0]==='sim'){SET.adsim=!SET.adsim;save();refreshAdHud();return'Simulated test ads '+(SET.adsim?'ON — 📺 button now visible':'OFF');}return'Provider: '+adProvider()+(SET.adsim?' (+sim)':'')+' · videos left today '+adLeft()+'. Use: ads sim';},
   elo:a=>{SV.elo=+a[0]||1000;return'Duel rating '+SV.elo;},
   save:()=>{save();saveAcc();return'Saved';}};
 function conRun(line){line=line.trim();if(!line)return;conLog('> '+line,'#fff');const[c,...a]=line.split(/\s+/);const f=CMDS[c.toLowerCase()];if(!f){conLog('Unknown command. Type help','#ff9a8a');return;}
@@ -3419,11 +3423,59 @@ function claimLogin(){if(!loginReady())return;const L=loginState(),i=L.n%28,info
   banner('🎁 DAY '+(i+1)+' REWARD<small>'+msg.toUpperCase()+'</small>',3.5);SFX.level();if(info.big){MFN.pl(P.pos.x,P.pos.z,1.3,22,0xffd040,1.6);screenFlash('#ffe080',.4,.5);}renderLogin();}
 function renderLogin(){const L=loginState(),cur=L.n%28,ready=loginReady(),cyc=Math.floor(L.n/28);let h=`<div style="font-size:12px;text-align:center;opacity:.8;margin-bottom:8px">Log in on any day to claim the next reward — <b>missing a day never resets your progress</b>.${cyc?' Cycle '+(cyc+1)+': rewards are bigger!':''}</div><div class="lgrid">`;
   for(let i=0;i<28;i++){const inf=lrInfo(i),got=i<cur,now=i===cur&&ready;h+=`<div class="lday ${inf.big?'big':''} ${got?'got':''} ${now?'now':''}">${inf.big?'<i>★</i>':''}<small>Day ${i+1}</small><b>${inf.ic}</b><span>${inf.t}</span>${got?'<em>✓</em>':''}</div>`;}
-  h+=`</div><button class="pb gold wide big ${ready?'attn':''}" id="loginClaim" ${ready?'':'disabled'}>${ready?'🎁 Claim Day '+(cur+1):'Come back tomorrow for Day '+(cur+1)}</button>`;$('loginBody').innerHTML=h;}
+  h+=`</div><button class="pb gold wide big ${ready?'attn':''}" id="loginClaim" ${ready?'':'disabled'}>${ready?'🎁 Claim Day '+(cur+1):'Come back tomorrow for Day '+(cur+1)}</button>${adsOn()&&!ready&&L.n>0&&L.dbl!==todayKey()?'<button class="pb wide" id="loginDbl" style="margin-top:6px">📺 Optional: watch a video to double today’s reward</button>':''}`;$('loginBody').innerHTML=h;}
 function openLogin(){if(!SV)return;PANELS.forEach(x=>$(x).classList.add('hidden'));$('login').classList.remove('hidden');paused=true;renderLogin();}
-$('loginBtn').addEventListener('click',openLogin);$('login').addEventListener('click',e=>{if(e.target.id==='loginClaim')claimLogin();else if(e.target.id==='loginClose'){$('login').classList.add('hidden');paused=false;}});
+$('loginBtn').addEventListener('click',openLogin);$('login').addEventListener('click',e=>{if(e.target.id==='loginDbl')adWatch('login');else if(e.target.id==='loginClaim')claimLogin();else if(e.target.id==='loginClose'){$('login').classList.add('hidden');paused=false;}});
 
 PANELS.push('login');
+
+/* ---------------- optional rewarded video ads ---------------- */
+// Fill in ONE provider when you have an account. Nothing is ever shown unless the player taps a "Watch" button.
+const AD_CFG={h5Client:'',h5Test:true};// Google AdSense H5 Games Ads, e.g. 'ca-pub-1234567890123456' (after beta approval)
+let ADP=null,adBusy=false;const host=location.hostname;
+function adProvider(){if(ADP)return ADP;
+  if(/crazygames/.test(host)||/crazygames/.test(document.referrer))ADP='crazy';else if(/poki/.test(host)||/poki/.test(document.referrer))ADP='poki';else if(AD_CFG.h5Client)ADP='h5';else ADP='none';
+  if(ADP==='crazy'){const s=document.createElement('script');s.src='https://sdk.crazygames.com/crazygames-sdk-v3.js';s.onload=()=>{try{window.CrazyGames.SDK.init();}catch(e){}};document.head.appendChild(s);}
+  if(ADP==='poki'){const s=document.createElement('script');s.src='https://game-cdn.poki.com/scripts/v2/poki-sdk.js';s.onload=()=>{try{PokiSDK.init();}catch(e){}};document.head.appendChild(s);}
+  if(ADP==='h5'){const s=document.createElement('script');s.async=true;s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+AD_CFG.h5Client;s.crossOrigin='anonymous';s.setAttribute('data-ad-client',AD_CFG.h5Client);if(AD_CFG.h5Test)s.setAttribute('data-adbreak-test','on');document.head.appendChild(s);
+    window.adsbygoogle=window.adsbygoogle||[];window.adBreak=window.adConfig=o=>window.adsbygoogle.push(o);try{adConfig({preloadAdBreaks:'on',sound:'on'});}catch(e){}}
+  return ADP;}
+const adsOn=()=>adProvider()!=='none'||!!SET.adsim;
+function adPause(on){if(on){adBusy=true;paused=true;if(musG)musG.gain.value=0;}else{adBusy=false;paused=false;if(musG)musG.gain.value=SET.music?.16:0;}}
+function showRewardedAd(onReward){if(adBusy)return;const prov=adProvider();let done=false;const ok=()=>{if(done)return;done=true;adPause(false);onReward();},fail=t=>{if(done)return;done=true;adPause(false);toast(t||'No video available right now — try again later');};
+  if(prov==='crazy'&&window.CrazyGames){adPause(true);try{window.CrazyGames.SDK.ad.requestAd('rewarded',{adStarted:()=>{},adFinished:ok,adError:()=>fail()});}catch(e){fail();}return;}
+  if(prov==='poki'&&window.PokiSDK){adPause(true);PokiSDK.rewardedBreak().then(s=>s?ok():fail('Video skipped — no reward')).catch(()=>fail());return;}
+  if(prov==='h5'&&window.adBreak){adPause(true);let gotReward=false;try{adBreak({type:'reward',name:'ryl-reward',beforeReward:show=>show(),adDismissed:()=>{},adViewed:()=>{gotReward=true;},adBreakDone:()=>{gotReward?ok():fail('No video available right now — try again later');}});}catch(e){fail();}return;}
+  if(SET.adsim){simAd(ok,fail);return;}fail('Video rewards aren’t available yet');}
+function simAd(ok,fail){adPause(true);const el=$('adSim');el.classList.remove('hidden');let t=5;const tick=()=>{$('adSimT').textContent=t>0?'Reward in '+t+'s':'Reward ready!';$('adSimX').textContent=t>0?'✖ Skip (no reward)':'✔ Claim reward';};tick();
+  const iv=setInterval(()=>{t--;tick();if(t<=0)clearInterval(iv);},1000);$('adSimX').onclick=()=>{clearInterval(iv);el.classList.add('hidden');t>0?fail('Video skipped — no reward'):ok();};}
+/* boosts & rewards */
+const BOOSTS={xp:{n:'XP Boost',ic:'📈',d:'+50% XP from everything'},gold:{n:'Gold Boost',ic:'💰',d:'+50% gold from beasts & chests'},luck:{n:'Loot Luck',ic:'🍀',d:'+60% gear & egg drop chance'},spd:{n:'Swift Feet',ic:'💨',d:'+15% movement speed'}};
+const BOOST_MIN=30,AD_CAP=25;
+const boostOn=k=>!!(SV&&SV.boost&&SV.boost[k]>Date.now());
+function adDay(){ACC.ads=ACC.ads||{day:'',n:0,gold:0};if(ACC.ads.day!==todayKey()){ACC.ads={day:todayKey(),n:0,gold:0};}return ACC.ads;}
+function adLeft(){return AD_CAP-adDay().n;}
+function adWatch(kind,arg){if(adLeft()<=0){toast('Daily video limit reached — thanks for the support!');return;}
+  showRewardedAd(()=>{const A=adDay();A.n++;saveAcc();
+    if(kind==='boost'){SV.boost=SV.boost||{};SV.boost[arg]=Math.max(Date.now(),SV.boost[arg]||0)+BOOST_MIN*60000;GEARC=null;banner(BOOSTS[arg].ic+' '+BOOSTS[arg].n.toUpperCase()+'<small>ACTIVE FOR '+BOOST_MIN+' MINUTES · '+BOOSTS[arg].d.toUpperCase()+'</small>',3);SFX.buff();}
+    else if(kind==='gold'){const g=Math.round(300+SV.lv*60);SV.gold+=g;A.gold++;saveAcc();banner('💰 +◆ '+g.toLocaleString()+'<small>THANKS FOR WATCHING</small>',2.5);SFX.chest();}
+    else if(kind==='home'){const h=H();if(h&&h.build){h.build.start-=30*60000;saveAcc();homeVisT=0;toast('🏗️ Construction sped up by 30 minutes');if(Date.now()>=h.build.start+h.build.dur*1000){const t=HOMES[HTIER(h.build.type)];h.tier=h.build.type;h.build=null;saveAcc();buildHome();banner('🏡 '+t.n.toUpperCase()+'<small>CONSTRUCTION COMPLETE</small>',3);}}}
+    else if(kind==='garden'){const h=H();if(h)for(const b of h.beds)if(b&&b.h&&!b.done)b.start-=30*60000;saveAcc();homeVisT=0;toast('🌱 Garden beds grew 30 minutes');}
+    else if(kind==='login'){const L=loginState();if(L.dbl!==todayKey()){L.dbl=todayKey();const i=(L.n-1+28)%28;const msg=grantLogin(i);saveAcc();banner('🎁 DOUBLED!<small>'+msg.toUpperCase()+'</small>',3);SFX.level();}}
+    save();if(!$('dlg').classList.contains('hidden'))renderDlg();if(!$('login').classList.contains('hidden'))renderLogin();refreshAdHud();});}
+function renderAds(){const A=adDay();let h=`<div style="font-size:12px;opacity:.8;text-align:center;margin-bottom:6px">Totally optional — watch a short video for a reward. Videos left today: <b>${adLeft()}/${AD_CAP}</b>${SET.adsim&&adProvider()==='none'?'<br><span style="color:#ffb080">Test mode: simulated ads (no real video)</span>':''}</div>`;
+  h+=`<div class="qh">⏱️ ${BOOST_MIN}-MINUTE BOOSTS <span>stack time by watching again</span></div>`;
+  for(const k in BOOSTS){const B=BOOSTS[k],rem=boostOn(k)?Math.ceil((SV.boost[k]-Date.now())/60000):0;h+=`<div class="mrow"><div class="mi">${B.ic}</div><div><b>${B.n}</b>${rem?` <span class="sp" style="background:#2a8a3a">${rem} min left</span>`:''}<small>${B.d}</small></div><button class="pb gold" data-act="adw:boost:${k}" ${adLeft()>0?'':'disabled'}>📺 ${rem?'+30 min':'Watch'}</button></div>`;}
+  h+=`<div class="qh">🎁 INSTANT REWARDS</div><div class="mrow"><div class="mi">💰</div><div><b>Gold pouch</b><small>◆ ${Math.round(300+SV.lv*60).toLocaleString()} gold</small></div><button class="pb gold" data-act="adw:gold" ${adLeft()>0?'':'disabled'}>📺 Watch</button></div>`;
+  const hm=H();if(hm&&hm.build)h+=`<div class="mrow"><div class="mi">🏗️</div><div><b>Speed up construction</b><small>Skip 30 minutes of building</small></div><button class="pb gold" data-act="adw:home">📺 Watch</button></div>`;
+  if(hm&&hm.beds&&hm.beds.some(b=>b&&b.h&&!b.done))h+=`<div class="mrow"><div class="mi">🌱</div><div><b>Grow your garden</b><small>All growing beds advance 30 minutes</small></div><button class="pb gold" data-act="adw:garden">📺 Watch</button></div>`;
+  const L=loginState();if(!loginReady()&&L.dbl!==todayKey()&&L.n>0)h+=`<div class="mrow"><div class="mi">🎁</div><div><b>Double today’s login reward</b><small>Get Day ${(L.n-1)%28+1}’s reward again</small></div><button class="pb gold" data-act="adw:login">📺 Watch</button></div>`;
+  return h;}
+function openAds(){if(!adsOn())return;curNpc={d:{n:'Video Rewards',role:'Optional · never required',ic:'📺',line:''}};dlgView='ads';showDlg();}
+function refreshAdHud(){$('adBtn').classList.toggle('hidden',!adsOn());const el=$('boostBar');if(!SV){el.innerHTML='';return;}let h='';for(const k in BOOSTS)if(boostOn(k))h+=`<span title="${BOOSTS[k].n}">${BOOSTS[k].ic} ${Math.ceil((SV.boost[k]-Date.now())/60000)}m</span>`;el.innerHTML=h;}
+let adHudT=0;function adFrame(dt){adHudT-=dt;if(adHudT<=0){adHudT=5;refreshAdHud();}}
+Object.assign(PROFACT,{adw:(k,a)=>{adWatch(k,a);return'keep';}});
+$('adBtn').addEventListener('click',openAds);
 
 function drawMini(){if(INST){drawInstMini();return;}const S=240,view=40,sc=S/(view*2);mx.clearRect(0,0,S,S);const toM0=(x,z)=>[(x-P.pos.x+view)*sc,(z-P.pos.z+view)*sc];
   mx.fillStyle='#111';mx.fillRect(0,0,S,S);mx.drawImage(mapC,(P.pos.x-view+MO)*2,(P.pos.z-view+MO)*2,view*4,view*4,0,0,S,S);
@@ -3612,7 +3664,7 @@ function spawnBoss(){for(let t=0;t<40;t++){const a=rand(0,TAU),x=P.pos.x+Math.co
 
 function updChests(dt){for(let i=chests.length-1;i>=0;i--){const c=chests[i];
   if(!c.open){c.glow.material.opacity=.45+Math.sin(time*3+i)*.25;if(Math.random()<.08)part(c.x+rand(-.6,.6),rand(.4,1.4),c.z+rand(-.6,.6),0,rand(.5,1.5),0,0xffe080,.3,.8);
-    if(playing&&!P.dead&&Math.hypot(P.pos.x-c.x,P.pos.z-c.z)<2.2){c.open=true;c.t=0;SFX.chest();const g=Math.round(rand(25,55)*(1+.25*((c.lvl||1)-1))*(c.big?4:1));SV.gold+=g;
+    if(playing&&!P.dead&&Math.hypot(P.pos.x-c.x,P.pos.z-c.z)<2.2){c.open=true;c.t=0;SFX.chest();const g=Math.round(rand(25,55)*(1+.25*((c.lvl||1)-1))*(c.big?4:1)*(boostOn('gold')?1.5:1));SV.gold+=g;
       showNum(new THREE.Vector3(c.x,0,c.z),'+'+g+' ◆','gold crit',1.6);qEvent('chest');if(Math.random()<(c.big?1:.4))lootGear(c.lvl||1,c.x,c.z,c.big?2:0,c.big?.1:0);const pot=c.big||Math.random()<.4;if(pot&&invAdd(Math.random()<.55?'hp':'mp',1)){setTimeout(()=>showNum(new THREE.Vector3(c.x,0,c.z),'+1 Potion','heal',2.2),250);}
       gainXp(Math.max(1,Math.round(xpBase(c.lvl||1)*2.5*diffMult((c.lvl||1)-SV.lv))));for(let k=0;k<40;k++)part(c.x,.8,c.z,rand(-3,3),rand(5,11),rand(-3,3),k%3?0xffd54a:0xffffff,rand(.3,.6),rand(.8,1.3),{g:12});
       ringFx(c.x,c.z,3,0xffe080,.5);save();}}
@@ -3692,7 +3744,7 @@ function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/10
 function idle(dt){D.flap+=dt*12;D.pos.set(P.pos.x+1.6,1.7+Math.sin(time*6)*.2,P.pos.z+1);D.face=P.face;drag.root.position.copy(D.pos);drag.root.rotation.y=D.face;const fl=Math.sin(D.flap);drag.wings[0].rotation.z=-.3+fl*.7;drag.wings[1].rotation.z=.3-fl*.7;
   hero.root.position.copy(P.pos);hero.root.rotation.y=P.face;hero.capeP.rotation.x=.15+Math.sin(time*4)*.05;}
 requestAnimationFrame(loop);
-window.__G={openLogin,claimLogin,loginReady,conRun,conOpen,hurtPlayer,get INST(){return INST;},get DUEL(){return DUEL;},enterDungeon,duelStart,rivalOpts,instLeave,DUNGEONS,get PARTY(){return PARTY;},partyInvite,cam:camera,obsNear,hatchEgg,syncMyPets,myPack,petBonus,setSky:(t,w)=>{TOD_OV=t;WX_OV=w;},get NIGHT(){return NIGHT;},get WX(){return WX;},todNow,lootGear,rollGear,equipGear,parseGear,musicHit,cookTap,rhymePick,danceTap,filmShot,get ART(){return ART;},startPerform,startCook,startWrite,startFilm,startRoutine,startFree,ARTACT,openArts,BEAST,useSkill,doAttack,GH,OWN,get enemies(){return enemies;},damageEnemy,spawnEnemy,get NET(){return NET;},gainFame,rankOf,hallEntries,GACT,get gEd(){return gEd;},showGInvite,guildMsg,get myPlate(){return myPlate;},openCustomize,get custMode(){return custMode;},COS,owns,defaultLook,PLOTS,HOMES,buildHome,get HOME(){return ACC.home;},homeCandidates,NET,hostInvite,joinInvite,hostAcceptReply,leaveNet,netSend,NODES,PROFACT,startGather,craftAlch,craftJewel,jSel,equipJewel,shopTick,itemValue,buildStall,get GEAR(){return gearBonus();},ZONES,OUTPOSTS,WAYS,teleport,zoneLevel,zoneIdx,openWorldMap,spawnEnemy,NPCS,openNpc,qEvent,invN,invAdd,inTown,get nearNpc(){return nearNpc;},rebuildHero,ACC,toggleMount,openMountPick,freeMountEligible,MOUNTS,get MOUNT(){return MOUNT;},P,get SV(){return SV;},enemies,spawnBoss,togglePanel,get boss(){return boss;},doAttack,useSkill,gainXp,CC,D2,openPromo,SK};
+window.__G={adWatch,openAds,boostOn,openLogin,claimLogin,loginReady,conRun,conOpen,hurtPlayer,get INST(){return INST;},get DUEL(){return DUEL;},enterDungeon,duelStart,rivalOpts,instLeave,DUNGEONS,get PARTY(){return PARTY;},partyInvite,cam:camera,obsNear,hatchEgg,syncMyPets,myPack,petBonus,setSky:(t,w)=>{TOD_OV=t;WX_OV=w;},get NIGHT(){return NIGHT;},get WX(){return WX;},todNow,lootGear,rollGear,equipGear,parseGear,musicHit,cookTap,rhymePick,danceTap,filmShot,get ART(){return ART;},startPerform,startCook,startWrite,startFilm,startRoutine,startFree,ARTACT,openArts,BEAST,useSkill,doAttack,GH,OWN,get enemies(){return enemies;},damageEnemy,spawnEnemy,get NET(){return NET;},gainFame,rankOf,hallEntries,GACT,get gEd(){return gEd;},showGInvite,guildMsg,get myPlate(){return myPlate;},openCustomize,get custMode(){return custMode;},COS,owns,defaultLook,PLOTS,HOMES,buildHome,get HOME(){return ACC.home;},homeCandidates,NET,hostInvite,joinInvite,hostAcceptReply,leaveNet,netSend,NODES,PROFACT,startGather,craftAlch,craftJewel,jSel,equipJewel,shopTick,itemValue,buildStall,get GEAR(){return gearBonus();},ZONES,OUTPOSTS,WAYS,teleport,zoneLevel,zoneIdx,openWorldMap,spawnEnemy,NPCS,openNpc,qEvent,invN,invAdd,inTown,get nearNpc(){return nearNpc;},rebuildHero,ACC,toggleMount,openMountPick,freeMountEligible,MOUNTS,get MOUNT(){return MOUNT;},P,get SV(){return SV;},enemies,spawnBoss,togglePanel,get boss(){return boss;},doAttack,useSkill,gainXp,CC,D2,openPromo,SK};
 })();
 </script>
 </body>
