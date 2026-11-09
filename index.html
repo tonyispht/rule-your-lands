@@ -180,6 +180,7 @@ textarea.code{width:100%;height:64px;font:11px monospace;border-radius:8px;borde
 #custom .panel{max-width:540px;max-height:57vh;overflow-y:auto;border-radius:16px 16px 0 0;margin-top:auto}
 @media (orientation:landscape){#custom{align-items:flex-end;background:linear-gradient(90deg,transparent 40%,#000a)}#custom::before,#custom::after{flex:1 0 0}#custom .panel{max-height:94vh;width:min(50vw,480px);border-radius:16px;margin-right:10px}}
 .gbrow{display:flex;gap:6px}
+.bmc{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:9px 18px;border-radius:999px;background:#ffdd00;color:#1a1a1a;font:900 15px Nunito;text-decoration:none;box-shadow:0 4px 0 #b89a00,0 6px 16px #0006;pointer-events:auto}.bmc:active{transform:translateY(2px);box-shadow:0 2px 0 #b89a00}.bmc.sm{margin:0;padding:7px 12px;font-size:13px;white-space:nowrap}
 #boostBar{position:fixed;left:calc(8px + env(safe-area-inset-left));top:calc(100px + env(safe-area-inset-top));z-index:6;display:flex;gap:4px;pointer-events:none}#boostBar span{background:#1a3a1ae0;border:1px solid #7dff8a;border-radius:8px;padding:1px 6px;font:900 11px Nunito;color:#dfffe0}
 #adSim{position:fixed;inset:0;z-index:60;background:#000e;display:grid;place-items:center}#adSim .adbox{text-align:center;color:#fff;background:#1e2a44;border:2px solid #e8c56a;border-radius:16px;padding:22px 30px;font:700 14px Nunito}
 @keyframes attnGlow{0%,100%{box-shadow:0 0 4px 1px #ffd04a88,0 0 0 0 #ffd04a55}50%{box-shadow:0 0 14px 4px #ffd04acc,0 0 0 5px #ffd04a22}}
@@ -332,6 +333,7 @@ img.emb{vertical-align:-3px;display:inline-block}
     <div class="row"><div>Shadows<small>Turn off for smoother play</small></div><button class="pb" id="tShadow"></button></div>
     <div class="row"><div>Guild emblem by my name</div><button class="pb" id="tGuild"></button></div>
     <div class="row"><div>My nameplate<small>Name, guild and rank above your hero</small></div><button class="pb" id="tPlate"></button></div>
+    <div class="row" id="bmcRow"><div>Support Rule Your Lands<small>The game is free — tips help keep it growing ❤️</small></div><a class="bmc sm" href="https://buymeacoffee.com/Tonyispht" target="_blank" rel="noopener">☕ Buy me a coffee</a></div>
     <div class="row"><div>Fullscreen</div><button class="pb" id="tFull">Toggle</button></div>
     <div class="row"><div>Main menu<small>Progress is saved</small></div><button class="pb" id="tMenu">Menu</button></div>
     <div class="row"><div>Delete character<small>Tap twice to confirm</small></div><button class="pb off" id="tReset">Delete</button></div>
@@ -361,7 +363,7 @@ img.emb{vertical-align:-3px;display:inline-block}
 <script>
 (()=>{
 'use strict';
-const CG=!!window.__CG,CGS=CG?window.CrazyGames.SDK:null;const STO=CG?CGS.data:localStorage;
+const BMC='https://buymeacoffee.com/Tonyispht';const CG=!!window.__CG,CGS=CG?window.CrazyGames.SDK:null;const STO=CG?CGS.data:localStorage;
 const $=id=>document.getElementById(id);
 const TAU=Math.PI*2,rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t;
 const angDiff=(a,b)=>{let d=(b-a)%TAU;if(d>Math.PI)d-=TAU;if(d<-Math.PI)d+=TAU;return d;};
@@ -1584,6 +1586,7 @@ function renderStart(){const b=$('startBtns');let h=(JOIN_Q?`<div class="say" st
     h+=`<div class="rc"><span class="ri">${cl.ic}</span><div class="rn">${c.guild?emImg(c.guild.em,16)+' ':''}${c.name||cl.n}<small>${RANKS[rankOf(c.fame||0)][2]} ${RANKS[rankOf(c.fame||0)][0]} · Lv ${c.lv} ${cl.n} · ${CL[cl.parent||c.cls].race==='akkan'?"Ak'kan":'Human'} · ◆ ${c.gold.toLocaleString()} · ${c.mounts&&c.mounts.length?c.mounts.map(m=>MOUNTS[m].ic).join(''):'no mounts'}${id===ACC.first?' · first hero':''}</small></div><button class="pb gold" data-play="${id}">Play</button></div>`;}
   h+='</div>';if(ACC.chars.length<MAXCH)h+=`<button class="go${ACC.chars.length?' alt':''}" id="bNew">${ACC.chars.length?'New character':'PLAY'}</button>`;
   else h+='<div style="font-size:12px;opacity:.7">All 4 character slots used — delete one in Settings to make another.</div>';
+  if(!CG)h+=`<br><a class="bmc" href="${BMC}" target="_blank" rel="noopener">☕ Support the game · Buy me a coffee</a>`;
   if(ACC.chars.length)h+='<br><button class="pb off" style="margin-top:14px;font-size:12px" data-wipe="1">Reset entire account</button>';
   b.innerHTML=h;b.querySelectorAll('[data-play]').forEach(x=>x.onclick=()=>{initAudio();SV=loadChar(+x.dataset.play);beginGame(false);});
   const n=$('bNew');if(n)n.onclick=()=>{initAudio();openClassSel();};}
@@ -1599,7 +1602,7 @@ function beginGame(fresh){try{if(!CG&&innerWidth<900&&document.documentElement.r
   if(loginReady())setTimeout(()=>{if(playing&&!paused&&!custMode)openLogin();},2600);
   if(JOIN_Q&&NET.role==='off'){const c=JOIN_Q;JOIN_Q=null;setTimeout(()=>{curNpc={d:{n:'Multiplayer',role:'Play together — no server needed',ic:'🌐',line:''}};dlgView='net';showDlg();joinRoom(c);},1500);}}
 let JOIN_Q=(()=>{try{if(CG){const q=CGS.game.getInviteParam('join');if(q)return String(q).toUpperCase();}const q=new URLSearchParams(location.search).get('join');if(q){history.replaceState(null,'',location.pathname);return q.toUpperCase();}}catch(e){}return null;})();
-applyShadows();setTimeout(()=>{renderStart();if(CG)try{CGS.game.loadingStop();}catch(e){}},0);
+applyShadows();if(CG){const r=document.getElementById('bmcRow');if(r)r.remove();}setTimeout(()=>{renderStart();if(CG)try{CGS.game.loadingStop();}catch(e){}},0);
 let cgPlay=null;function cgFrame(){if(!CG)return;const on=playing&&!paused&&!adBusy;if(on!==cgPlay){cgPlay=on;try{on?CGS.game.gameplayStart():CGS.game.gameplayStop();}catch(e){}}}
 addEventListener('touchend',()=>{try{if(AC&&AC.state==='suspended')AC.resume();}catch(e){}},{passive:true});addEventListener('click',()=>{try{if(AC&&AC.state==='suspended')AC.resume();}catch(e){}});
 
