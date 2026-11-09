@@ -1259,7 +1259,7 @@ const SK={
     burst(P.pos.x,1,P.pos.z,20,0x8a40c0,4,.7,.4);const b=fwd(t.face);P.pos.set(t.pos.x-b.x*(t.r+.8),0,t.pos.z-b.z*(t.r+.8));P.face=Math.atan2(t.pos.x-P.pos.x,t.pos.z-P.pos.z);
     burst(P.pos.x,1,P.pos.z,20,0x8a40c0,4,.7,.4);animSwing(2,.25);damageEnemy(t,d.phys*2*r,P.pos,{forceCrit:true,kb:3});SFX.dash();}},
   camouflage:{n:'Camouflage',ic:'👁️',mp:20,cd:18,d:'Vanish for 7s (+20% speed). Enemies lose track of you. Your next hit deals a massive ambush critical.',use(d,r){buff('stealth',1,6+r,'Stealth','👁️');buff('spd',.2,6+r,'','');SFX.stealth();burst(P.pos.x,1,P.pos.z,30,0x404050,4,.8,.6,{normal:true,op:.6});for(const e of enemies)if(!e.boss&&e.state!=='wander'){e.state='wander';e.home.copy(e.pos);}}},
-  bladeFlurry:{n:'Blade Flurry',ic:'🌪️',mp:26,cd:10,d:'A blur of 8 dagger strikes on enemies in front, 70% each.',use(d,r){faceNearest(5);P.lockT=.7;for(let i=0;i<8;i++)later(i*.08,()=>{animSwing(i%2,.08);slashFx(P.pos.x,P.pos.z,P.face+rand(-.4,.4),.5,3,1.2,0xd0ffd0,rand(-.6,.6),rand(.7,1.4));SFX.swing();cone(3,1.6,d.phys*.7*r,{kb:.6,silent:i%2===1});});}},
+  bladeFlurry:{n:'Blade Flurry',ic:'🌪️',mp:26,cd:10,d:'A blur of 8 dagger strikes on enemies in front, 70% each.',use(d,r){faceNearest(5);P.lockT=.7;P.lockSoft=true;for(let i=0;i<8;i++)later(i*.08,()=>{animSwing(i%2,.08);slashFx(P.pos.x,P.pos.z,P.face+rand(-.4,.4),.5,3,1.2,0xd0ffd0,rand(-.6,.6),rand(.7,1.4));SFX.swing();cone(3,1.6,d.phys*.7*r,{kb:.6,silent:i%2===1});});}},
   multiShot:{n:'Multi Shot',ic:'🎯',mp:16,cd:5,d:'Loose 5 piercing arrows in a fan, 110% each.',use(d,r){const t=faceNearest(18);animSwing('shot',.35);SFX.bow();for(let i=-2;i<=2;i++)shoot('arrow',null,d.phys*1.1*r,{angle:P.face+i*.17,pierce:1});}},
   arrowRain:{n:'Arrow Rain',ic:'🌧️',mp:30,cd:12,d:'Volley of arrows on an area for 2.4s: 70% damage every 0.3s and slows.',use(d,r){const tp=targetPoint(18);animSwing('shot',.4);SFX.bow();
     zone(tp.x,tp.z,5,2.4,.3,0xfff0c0,()=>{nova(tp.x,tp.z,5,d.phys*.7*r,{kb:0,slow:1,silent:true});SFX.bow();},{fx:(x,z,rr)=>{for(let i=0;i<3;i++){const a=rand(0,TAU),q=rand(0,rr);part(x+Math.cos(a)*q,6,z+Math.sin(a)*q,0,-30,0,0xfff6e0,.3,.22,{end:.3,streak:3});if(Math.random()<.3)sparks(x+Math.cos(a)*q,.2,z+Math.sin(a)*q,2,0xfff0c0,6);}}});}},
@@ -1307,7 +1307,7 @@ const SK={
     SFX.magic();nova(P.pos.x,P.pos.z,6,d.holy*1.4*r,{type:'holy',stun:3,kb:0,color:0x6aff6a});}},
   shadowVeil:{n:'Shadow Veil',ic:'🌑',mp:18,cd:16,d:'Melt into shadow for 7s (+25% crit, +20% speed). Your next hit is a devastating ambush.',use(d,r){buff('stealth',1,6+r,'Veil','🌑');buff('crit',.25,6+r,'','');buff('spd',.2,6+r,'','');SFX.stealth();burst(P.pos.x,1,P.pos.z,30,0x302040,4,.8,.6,{normal:true,op:.6});for(const e of enemies)if(!e.boss&&e.state!=='wander'){e.state='wander';e.home.copy(e.pos);}}},
   shadowStrike:{n:'Shadow Strike',ic:'🌒',mp:30,cd:11,d:'Blink between up to 5 nearby enemies, slashing each for 200%.',use(d,r){const list=enemies.filter(e=>!e.dead&&Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z)<12).sort((a,b)=>Math.hypot(a.pos.x-P.pos.x,a.pos.z-P.pos.z)-Math.hypot(b.pos.x-P.pos.x,b.pos.z-P.pos.z)).slice(0,5);
-    if(!list.length){toast('No target');P.mp+=30;P.cd.shadowStrike=0;return;}P.invuln=Math.max(P.invuln,list.length*.13+.3);P.lockT=list.length*.13;
+    if(!list.length){toast('No target');P.mp+=30;P.cd.shadowStrike=0;return;}P.invuln=Math.max(P.invuln,list.length*.13+.3);P.lockT=list.length*.13;P.lockSoft=false;
     list.forEach((e,i)=>later(i*.13,()=>{if(e.dead)return;burst(P.pos.x,1,P.pos.z,12,0x8040c0,3,.6,.3);const a=rand(0,TAU);P.pos.set(e.pos.x+Math.cos(a)*(e.r+.7),0,e.pos.z+Math.sin(a)*(e.r+.7));P.face=Math.atan2(e.pos.x-P.pos.x,e.pos.z-P.pos.z);
       animSwing(i%2,.12);slashFx(P.pos.x,P.pos.z,P.face,.4,2.6,1.6,0xc090ff,rand(-.5,.5),1);SFX.dash();damageEnemy(e,d.phys*2*r,P.pos,{kb:3});}));}},
 };
@@ -3513,7 +3513,7 @@ function updPlayer(dt){
   let l=Math.hypot(ix,iz);if(l>1){ix/=l;iz/=l;l=1;}inp.x=ix;inp.z=iz;
   if(P.atkHeld&&P.atkT<=0&&P.dashT<=0)doAttack();
   {const fh=P.mounted&&SV.mount==='griffin'?14:0;P.flyH=lerp(P.flyH,fh,Math.min(1,dt*(fh?1.2:2.2)));if(P.flyH<.02)P.flyH=0;}
-  let spd=P.mounted?MOUNTS[SV.mount].spd*(1+buffV('spd')*.5):d.spd;if(P.atkT>0)spd*=weaponKind()==='ranged'?.55:.25;if(P.spinT>0)spd*=.8;if(P.lockT>0)spd=0;
+  let spd=P.mounted?MOUNTS[SV.mount].spd*(1+buffV('spd')*.5):d.spd;if(P.lockT>0&&!P.lockSoft)spd=0;
   if(P.leap){const L=P.leap;L.t+=dt;const p=Math.min(1,L.t/L.dur);P.pos.lerpVectors(L.from,L.to,p);P.pos.y=0;hero.root.position.y=Math.sin(p*Math.PI)*3;
     if(Math.random()<.6)part(P.pos.x,hero.root.position.y+1,P.pos.z,0,0,0,0xffe0a0,.8,.3);
     if(p>=1){P.leap=null;hero.root.position.y=0;L.onLand&&L.onLand();kick(.6);scorch(P.pos.x,P.pos.z,3.5,4);spikes(P.pos.x,P.pos.z,4,14,0x8a7a64,.8,1.1);}}
